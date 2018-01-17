@@ -16,7 +16,7 @@
 #define SE_KOUKA_L 12           // Not Very Effective
 #define SE_KOUKA_M 13           // Normal Effectiveness
 #define SE_KOUKA_H 14           // Super Effective
-#define SE_BOWA2 15             // Pokémon Withdrawl
+#define SE_BOWA2 15             // Pokémon Withdrawal
 #define SE_POKE_DEAD 16         // Pokémon Fainted
 #define SE_NIGERU 17            // Flee from Wild Battle
 #define SE_JIDO_DOA 18          // Pokémon Center Door
@@ -43,7 +43,7 @@
 #define SE_FU_ZUZUZU 39         // Lavaridge Gym Warp
 #define SE_RU_GASHIN 40         // Sootopolis Gym - Stairs Appear
 #define SE_RU_GASYAN 41         // Sootopolis Gym - Ice Breaking
-#define SE_RU_BARI 42           // Sootopolis Gym - Stepping on Ice
+#define SE_RU_BARI 42           // Sootopolis Gym - Walking on Ice
 #define SE_RU_HYUU 43           // Falling Down
 #define SE_KI_GASYAN 44
 #define SE_TK_WARPIN 45         // Warp In
@@ -83,7 +83,7 @@
 #define SE_DOKU 79              // Overworld Poison Damage
 #define SE_ESUKA 80             // Escalator
 #define SE_T_AME 81             // Rain
-#define SE_T_AME_E 82           // Rain stop
+#define SE_T_AME_E 82           // Rain Stop
 #define SE_T_OOAME 83           // Heavy Rain
 #define SE_T_OOAME_E 84         // Heavy Rain Stop
 #define SE_T_KOAME 85           // Light Rain
@@ -263,7 +263,7 @@
 #define BGM_DOORO_X1 360        // Route 110
 #define BGM_DOORO_X3 361        // Route 120
 #define BGM_MACHI_S2 362        // Petalburg City
-#define BGM_MACHI_S4 363        // Oldale Town
+#define BGM_MACHI_S4 363        // Oldale/Lavaridge Town
 #define BGM_GIM 364             // Gym
 #define BGM_NAMINORI 365        // Surfing
 #define BGM_DAN01 366           // Caves and Darkness
@@ -273,20 +273,20 @@
 #define BGM_FANFA4 370          // Obtained an Item!
 #define BGM_FANFA5 371          // Your Pokémon Just Evolved!
 #define BGM_ME_WAZA 372         // Obtained a TM/HM!
-#define BGM_BIJYUTU 373         // Lilycove Musseum
+#define BGM_BIJYUTU 373         // Lilycove Museum
 #define BGM_DOORO_X4 374        // Route 122/Intro
 #define BGM_FUNE_KAN 375        // Slateport Museum
 #define BGM_ME_SHINKA 376       // Evolution Intro
 #define BGM_SHINKA 377          // Evolution
-#define BGM_ME_WASURE 378       // Move Deleted
+#define BGM_ME_WASURE 378       // Move Deleted/Messed Up Appeal
 #define BGM_SYOUJOEYE 379       // Encounter! Tuber
 #define BGM_BOYEYE 380          // Encounter! Boy
-#define BGM_DAN02 381           // Abandoned Ship
-#define BGM_MACHI_S3 382        // Fortree City
+#define BGM_DAN02 381           // Abandoned Ship/Southern Island
+#define BGM_MACHI_S3 382        // Fortree City/Pacifidlog Town
 #define BGM_ODAMAKI 383         // Professor Birch's Lab
-#define BGM_B_TOWER 384         // Battle Tower (RS)
+#define BGM_B_TOWER 384         // Battle Tower
 #define BGM_SWIMEYE 385         // Encounter! Swimmer
-#define BGM_DAN03 386           // Meteor Falls
+#define BGM_DAN03 386           // Meteor Falls/Cave of Origin
 #define BGM_ME_KINOMI 387       // Obtained a Berry!
 #define BGM_ME_TAMA 388         // Awakening the Super-Ancient Pokémon
 #define BGM_ME_B_BIG 389        // Slots Jackpot!
@@ -297,9 +297,9 @@
 #define BGM_TEST2 394           // Contest Test 2
 #define BGM_TEST3 395           // Contest Test 3
 #define BGM_TEST4 396           // Contest Test 4
-#define BGM_TEST 397            // Encounter! Gentleman (Test?)
+#define BGM_TEST 397            // Encounter! Gentleman
 #define BGM_GOMACHI0 398        // Verdanturf Town
-#define BGM_GOTOWN 399          // Rustboro City
+#define BGM_GOTOWN 399          // Rustboro/Mauville/Mossdeep City
 #define BGM_POKECEN 400         // Pokémon Center
 #define BGM_NEXTROAD 401        // Route 104
 #define BGM_GRANROAD 402        // Route 119
@@ -329,24 +329,24 @@
 #define BGM_CASINO 426          // Game Corner
 #define BGM_HIGHTOWN 427        // Dewford Town
 #define BGM_SAFARI 428          // Safari Zone
-#define BGM_C_ROAD 429          // Victory Toad
+#define BGM_C_ROAD 429          // Victory Road
 #define BGM_AJITO 430           // Aqua/Magma Hideout
 #define BGM_M_BOAT 431          // Sailing
 #define BGM_M_DUNGON 432        // Mt. Pyre (Inside)
 #define BGM_FINECITY 433        // Slateport City
 #define BGM_MACHUPI 434         // Mt. Pyre (Outside)
 #define BGM_P_SCHOOL 435        // Pokémon Trainer's School
-#define BGM_DENDOU 436          // Hall of Fame
-#define BGM_TONEKUSA 437        // Lavaridge Town
+#define BGM_DENDOU 436          // You're the Champion!
+#define BGM_TONEKUSA 437        // Fallarbor Town
 #define BGM_MABOROSI 438        // Sealed Chamber
-#define BGM_CON_FAN 439         // You are the Champion!
+#define BGM_CON_FAN 439         // Obtained a Contest Ribbon!
 #define BGM_CONTEST0 440        // Pokémon Contest
 #define BGM_MGM0 441            // Encounter! Team Magma
 #define BGM_T_BATTLE 442        // Opening Battle
 #define BGM_OOAME 443           // The Flood
 #define BGM_HIDERI 444          // The Drought
 #define BGM_RUNECITY 445        // Sootopolis City
-#define BGM_CON_K 446           // Berry Blending Results
+#define BGM_CON_K 446           // Contest/Berry Blending Results
 #define BGM_EIKOU_R 447         // Hall of Fame
 #define BGM_KARAKURI 448        // Trick House
 #define BGM_HUTAGO 449          // Encounter! Kid

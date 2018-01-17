@@ -15,7 +15,7 @@ gSongTable:: @ 845548C
 	song se_kouka_l, 1, 1                @ Not Very Effective
 	song se_kouka_m, 1, 1                @ Normal Effectiveness
 	song se_kouka_h, 1, 1                @ Super Effective
-	song se_bowa2, 1, 1                  @ Pokémon Withdrawl
+	song se_bowa2, 1, 1                  @ Pokémon Withdrawal
 	song se_poke_dead, 1, 1              @ Pokémon Fainted
 	song se_nigeru, 1, 1                 @ Flee from Wild Battle
 	song se_jido_doa, 1, 1               @ Pokémon Center Door
@@ -23,7 +23,7 @@ gSongTable:: @ 845548C
 	song se_ban, 1, 1                    @ Bang
 	song se_pin, 1, 1                    @ Exclamation Bubble
 	song se_boo, 1, 1                    @ Contest Jam
-	song se_bowa, 1, 1                   @ Giving Poké Ball to Nurse, Poké Ball wiggle
+	song se_bowa, 1, 1                   @ Giving Poké Ball to Nurse, Poké Ball Wiggle
 	song se_jyuni, 2, 2                  @ Places in Contest Appearing
 	song se_a, 1, 1                      @ Bard A
 	song se_i, 1, 1                      @ Bard I
@@ -56,7 +56,7 @@ gSongTable:: @ 845548C
 	song se_moter, 2, 2
 	song se_card, 1, 1
 	song se_save, 1, 1                   @ Save
-	song se_kon, 1, 1                    @ Poke Ball Bounce 1
+	song se_kon, 1, 1                    @ Poké Ball Bounce 1
 	song se_kon2, 1, 1                   @ Poké Ball Bounce 2
 	song se_kon3, 1, 1                   @ Poké Ball Bounce 3
 	song se_kon4, 1, 1                   @ Poké Ball Bounce 4
@@ -79,14 +79,14 @@ gSongTable:: @ 845548C
 	song se_fuusen3, 2, 2                @ Yellow Balloon
 	song se_toy_kabe, 2, 2               @ Breakable Door
 	song se_toy_dango, 2, 2              @ Mud Ball
-	song se_doku, 1, 1                   @ Overworld Poison damage
+	song se_doku, 1, 1                   @ Overworld Poison Damage
 	song se_esuka, 1, 1                  @ Escalator
 	song se_t_ame, 3, 3                  @ Rain
-	song se_t_ame_e, 3, 3                @ Rain stop
+	song se_t_ame_e, 3, 3                @ Rain Stop
 	song se_t_ooame, 3, 3                @ Heavy Rain
-	song se_t_ooame_e, 3, 3              @ Heavy Rain stop
+	song se_t_ooame_e, 3, 3              @ Heavy Rain Stop
 	song se_t_koame, 3, 3                @ Light Rain
-	song se_t_koame_e, 3, 3              @ Light Rain stop
+	song se_t_koame_e, 3, 3              @ Light Rain Stop
 	song se_t_kami, 1, 1                 @ Thunder
 	song se_t_kami2, 1, 1                @ Thunder 2
 	song se_elebeta, 1, 1                @ Elevator
@@ -363,7 +363,7 @@ gSongTable:: @ 845548C
 	song bgm_dooro_x1, 0, 0              @ Route 110
 	song bgm_dooro_x3, 0, 0              @ Route 120
 	song bgm_machi_s2, 0, 0              @ Petalburg City
-	song bgm_machi_s4, 0, 0              @ Oldale Town
+	song bgm_machi_s4, 0, 0              @ Oldale/Lavaridge Town
 	song bgm_gim, 0, 0                   @ Gym
 	song bgm_naminori, 0, 0              @ Surfing
 	song bgm_dan01, 0, 0                 @ Caves and Darkness
@@ -378,15 +378,15 @@ gSongTable:: @ 845548C
 	song bgm_fune_kan, 0, 0              @ Slateport Museum
 	song bgm_me_shinka, 2, 2             @ Evolution Intro
 	song bgm_shinka, 0, 0                @ Evolution
-	song bgm_me_wasure, 2, 2             @ Move Deleted
+	song bgm_me_wasure, 2, 2             @ Move Deleted/Messed Up Appeal
 	song bgm_syoujoeye, 0, 0             @ Encounter! Tuber
 	song bgm_boyeye, 0, 0                @ Encounter! Boy
-	song bgm_dan02, 0, 0                 @ Abandoned Ship
-	song bgm_machi_s3, 0, 0              @ Fortree City
+	song bgm_dan02, 0, 0                 @ Abandoned Ship/Southern Island
+	song bgm_machi_s3, 0, 0              @ Fortree City/Pacifidlog Town
 	song bgm_odamaki, 0, 0               @ Professor Birch's Lab
 	song bgm_b_tower, 0, 0               @ Battle Tower (RS)
 	song bgm_swimeye, 0, 0               @ Encounter! Swimmer
-	song bgm_dan03, 0, 0                 @ Meteor Falls
+	song bgm_dan03, 0, 0                 @ Meteor Falls/Cave of Origin
 	song bgm_me_kinomi, 2, 2             @ Obtained a Berry!
 	song bgm_me_tama, 2, 2               @ Awakening the Super-Ancient Pokémon
 	song bgm_me_b_big, 2, 2              @ Slots Jackpot!
@@ -397,9 +397,9 @@ gSongTable:: @ 845548C
 	song bgm_test2, 0, 0                 @ Contest Test 2
 	song bgm_test3, 0, 0                 @ Contest Test 3
 	song bgm_test4, 0, 0                 @ Contest Test 4
-	song bgm_test, 0, 0                  @ Encounter! Gentleman (Test?)
+	song bgm_test, 0, 0                  @ Encounter! Gentleman
 	song bgm_gomachi0, 0, 0              @ Verdanturf Town
-	song bgm_gotown, 0, 0                @ Rustboro City
+	song bgm_gotown, 0, 0                @ Rustboro/Mauville/Mossdeep City
 	song bgm_pokecen, 0, 0               @ Pokémon Center
 	song bgm_nextroad, 0, 0              @ Route 104
 	song bgm_granroad, 0, 0              @ Route 119
@@ -434,19 +434,19 @@ gSongTable:: @ 845548C
 	song bgm_m_boat, 0, 0                @ Sailing
 	song bgm_m_dungon, 0, 0              @ Mt. Pyre (Inside)
 	song bgm_finecity, 0, 0              @ Slateport City
-	song bgm_machupi, 0, 0               @ Mt. Pyte (Outside)
+	song bgm_machupi, 0, 0               @ Mt. Pyre (Outside)
 	song bgm_p_school, 0, 0              @ Pokémon Trainer's School
-	song bgm_dendou, 0, 0                @ Hall of Fame
-	song bgm_tonekusa, 0, 0              @ Lavaridge Town
+	song bgm_dendou, 0, 0                @ You're the Champion!
+	song bgm_tonekusa, 0, 0              @ Fallarbor Town
 	song bgm_maborosi, 0, 0              @ Sealed Chamber
-	song bgm_con_fan, 0, 0               @ You are the Champion!
+	song bgm_con_fan, 0, 0               @ Obtained a Contest Ribbon!
 	song bgm_contest0, 0, 0              @ Pokémon Contest
 	song bgm_mgm0, 0, 0                  @ Encounter! Team Magma
 	song bgm_t_battle, 0, 0              @ Opening Battle
 	song bgm_ooame, 0, 0                 @ The Flood
 	song bgm_hideri, 0, 0                @ The Drought
 	song bgm_runecity, 0, 0              @ Sootopolis City
-	song bgm_con_k, 0, 0                 @ Berry Blending Results
+	song bgm_con_k, 0, 0                 @ Contest/Berry Blending Results
 	song bgm_eikou_r, 0, 0               @ Hall of Fame
 	song bgm_karakuri, 0, 0              @ Trick House
 	song bgm_hutago, 0, 0                @ Encounter! Kid
@@ -470,5 +470,5 @@ gSongTable:: @ 845548C
 	song bgm_radio_tower_occupied, 0, 0  @ GSC - Radio Tower Takeover!
 
 	.align 2
-dummy_song_header:      @ 845632C
+dummy_song_header: @ 845632C
 	.byte 0, 0, 0, 0
