@@ -491,7 +491,7 @@ debug_80C393C:
 ._40:
 	.align	2, 0
 ._39:
-	.word	gUnknown_Debug_083F7FD6
+	.word	gDebug_SizeComparison_Scale
 
 	thumb_func_end debug_80C393C
 
@@ -922,16 +922,16 @@ debug_80C3A50:
 ._56:
 	.word	gTasks
 	.word	gSaveBlock2
-	.word	gUnknown_Debug_083F7FD6+0x4
-	.word	gUnknown_Debug_083F7FDE
-	.word	gUnknown_Debug_083F7FE2
-	.word	gUnknown_Debug_083F7FED
-	.word	gUnknown_Debug_083F7FF6
-	.word	gUnknown_Debug_083F8001
-	.word	gUnknown_Debug_083F800C
-	.word	gUnknown_Debug_083F8019
-	.word	gUnknown_Debug_083F8022
-	.word	gUnknown_Debug_083F8028
+	.word	gDebug_SizeComparison_Scale+0x4
+	.word	gDebug_SizeComparison_Position
+	.word	gDebug_SizeComparison_LeftSmaller
+	.word	gDebug_SizeComparison_RightBigger
+	.word	gDebug_SizeComparison_UpMoveUp
+	.word	gDebug_SizeComparison_DownMoveDown
+	.word	gDebug_SizeComparison_ASwitch
+	.word	gDebug_SizeComparison_BQuit
+	.word	gDebug_SizeComparison_StartForLastMon
+	.word	gDebug_SizeComparison_SelectForNextMon
 	.word	gSprites
 	.word	gPokedexEntries
 	.word	0x4000048
@@ -1742,8 +1742,8 @@ debug_80C42B8:
 ._151:
 	.align	2, 0
 ._150:
-	.word	gUnknown_Debug_083F8194
-	.word	gUnknown_Debug_083F81A0
+	.word	gBattleForDebug_ChooseAPokemon
+	.word	gBattleForDebug_StartNext
 	.word	gUnknown_Debug_2038A0C
 	.word	gTasks
 	.word	debug_80C44EC+1
@@ -2251,7 +2251,7 @@ debug_80C4694:
 ._214:
 	.align	2, 0
 ._213:
-	.word	gUnknown_Debug_083F81AD
+	.word	gBattleForDebug_YourPokemon
 	.word	gPlayerParty
 
 	thumb_func_end debug_80C4694
@@ -2307,7 +2307,7 @@ debug_80C4704:
 ._217:
 	.align	2, 0
 ._216:
-	.word	gUnknown_Debug_083F81BA
+	.word	gBattleForDebug_FoesPokemon
 	.word	gEnemyParty
 
 	thumb_func_end debug_80C4704
@@ -2443,11 +2443,11 @@ debug_80C47BC:
 ._225:
 	.align	2, 0
 ._224:
-	.word	gUnknown_Debug_083F81C7
-	.word	gUnknown_Debug_083F81A0
-	.word	gUnknown_Debug_083F81D6
-	.word	gUnknown_Debug_083F81E5
-	.word	gUnknown_Debug_083F8068
+	.word	gBattleForDebug_ChooseABattleMode
+	.word	gBattleForDebug_StartNext
+	.word	gBattleForDebug_BattleModesHeader
+	.word	gBattleForDebug_AIFlagsHeader
+	.word	gBattleForDebug_BattleModes
 	.word	gUnknown_Debug_2038A0C
 	.word	gTasks
 	.word	debug_80C48A0+1
@@ -2610,7 +2610,7 @@ debug_80C4900:
 	.align	2, 0
 ._236:
 	.word	gBattleTypeFlags
-	.word	gUnknown_Debug_083F8068
+	.word	gBattleForDebug_BattleModes
 	.word	gUnknown_Debug_2038A0C
 	.word	gUnknown_02023A14_50
 	.word	gTasks
@@ -3115,9 +3115,9 @@ debug_80C4D14:
 ._292:
 	.align	2, 0
 ._291:
-	.word	gUnknown_Debug_083F81C7
-	.word	gUnknown_Debug_083F81F5
-	.word	gUnknown_Debug_083F8202
+	.word	gBattleForDebug_ChooseABattleMode
+	.word	gBattleForDebug_StartBattle
+	.word	gBattleForDebug_BattleTerrainsHeader
 	.word	gUnknown_Debug_2038A0C
 	.word	gTasks
 	.word	debug_80C4DB8+1
@@ -3234,7 +3234,7 @@ debug_80C4E18:
 	.align	2, 0
 ._302:
 	.word	gBattleTerrain
-	.word	gUnknown_Debug_083F814C
+	.word	gBattleForDebug_BattleTerrains
 	.word	gTasks
 	.word	debug_80C5158+1
 ._300:
@@ -3338,7 +3338,7 @@ debug_80C4F00:
 ._319:
 	.align	2, 0
 ._318:
-	.word	gUnknown_Debug_083F814C
+	.word	gBattleForDebug_BattleTerrains
 
 	thumb_func_end debug_80C4F00
 
@@ -3437,11 +3437,11 @@ debug_80C4F48:
 ._321:
 	.align	2, 0
 ._320:
-	.word	gUnknown_Debug_083F8211
-	.word	gUnknown_Debug_083F81A0
-	.word	gUnknown_Debug_083F8222
-	.word	gUnknown_Debug_083F822F
-	.word	gUnknown_Debug_083F8233
+	.word	gBattleForDebug_ChooseYourGender
+	.word	gBattleForDebug_StartNext
+	.word	gBattleForDebug_GenderHeader
+	.word	gBattleForDebug_GenderBoy
+	.word	gBattleForDebug_GenderGirl
 	.word	gTasks
 	.word	debug_80C5038+1
 

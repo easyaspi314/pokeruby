@@ -8,57 +8,61 @@
 gUnknown_Debug_083F7FD4:: @ 0x83F7FD4
 	.string "▶$"
 
-gUnknown_Debug_083F7FD6:: @ 0x83F7FD6
-	.string "ゆみあくひりつ$"
+gDebug_SizeComparison_Scale:: @ 0x83F7FD6
+	.string "ゆみあくひりつ$" @TRANSLATION: "{JPN}　　{ENG}Scale$"
 
-gUnknown_Debug_083F7FDE:: @ 0x83F7FDE
-	.string "たかさ$"
+gDebug_SizeComparison_Position:: @ 0x83F7FDE
+	.string "たかさ$" @TRANSLATION: "Pos\.$"
 
-gUnknown_Debug_083F7FE2:: @ 0x83F7FE2
-	.string "Lキー▶しゅくしょう$"
+gDebug_SizeComparison_LeftSmaller:: @ 0x83F7FE2
+	.string "Lキー▶しゅくしょう$" @TRANSLATION: "{LEFT_ARROW}: Smaller$"
 
-gUnknown_Debug_083F7FED:: @ 0x83F7FED
-	.string "Rキー▶かくだい$"
+gDebug_SizeComparison_RightBigger:: @ 0x83F7FED
+	.string "Rキー▶かくだい$" @TRANSLATION: "{RIGHT_ARROW}: Bigger$"
 
-gUnknown_Debug_083F7FF6:: @ 0x83F7FF6
-	.string "Uキー▶うえ　いどう$"
+gDebug_SizeComparison_UpMoveUp:: @ 0x83F7FF6
+	.string "Uキー▶うえ　いどう$" @TRANSLATION: "{UP_ARROW}: Move up$"
 
-gUnknown_Debug_083F8001:: @ 0x83F8001
-	.string "Dキー▶した　いどう$"
+gDebug_SizeComparison_DownMoveDown:: @ 0x83F8001
+	.string "Dキー▶した　いどう$" @TRANSLATION: "{DOWN_ARROW}: Move down$"
 
-gUnknown_Debug_083F800C:: @ 0x83F800C
-	.string "Aボタン▶そうさきりかえ$"
+gDebug_SizeComparison_ASwitch:: @ 0x83F800C
+	.string "Aボタン▶そうさきりかえ$" @TRANSLATION: "A: SWITCH$"
 
-gUnknown_Debug_083F8019:: @ 0x83F8019
-	.string "Bボタン▶やめる$"
+gDebug_SizeComparison_BQuit:: @ 0x83F8019
+	.string "Bボタン▶やめる$" @TRANSLATION: "B: QUIT$"
 
-gUnknown_Debug_083F8022:: @ 0x83F8022
-	.string "スタート:$"
+@ the following is like this:
+@
+@ START:  <SPECIES>  :SELECT
+@ Presing Start will go to the last index, and vice versa.
+gDebug_SizeComparison_StartForLastMon:: @ 0x83F802
+	.string "スタート:$" @TRANSLATION: "START:$"
 
-gUnknown_Debug_083F8028:: @ 0x83F8028
-	.string ":セレクト$"
+gDebug_SizeComparison_SelectForNextMon:: @ 0x83F8028
+	.string ":セレクト$" @TRANSLATION: ":SELECT$"
 
-gUnknown_Debug_083F802E:: @ 0x83F802E
-	.string "やせいたいせん$"
+gBattleForDebug_WildBattle:: @ 0x83F802E
+	.string "やせいたいせん$" @TRANSLATION: "WILD$"
 
-gUnknown_Debug_083F8036:: @ 0x83F8036
-	.string "1VS1たいせん$"
+gBattleForDebug_SingleBattle:: @ 0x83F8036
+	.string "1VS1たいせん$" @TRANSLATION: "SINGLE$"
 
-gUnknown_Debug_083F803F:: @ 0x83F803F
-	.string "2VS2たいせん$"
+gBattleForDebug_DoubleBattle:: @ 0x83F803F
+	.string "2VS2たいせん$" @TRANSLATION: "DOUBLE$"
 
-gUnknown_Debug_083F8048:: @ 0x83F8048
-	.string "{COLOR BLUE}1VS1つうしんたいせん$"
+gBattleForDebug_SingleLinkBattle:: @ 0x83F8048
+	.string "{COLOR BLUE}1VS1つうしんたいせん$" @TRANSLATION: "{COLOR BLUE}1v1 LINK$"
 
-gUnknown_Debug_083F8058:: @ 0x83F8058
-	.string "{COLOR BLUE}2VS2つうしんたいせん$"
+gBattleForDebug_DoubleLinkBattle:: @ 0x83F8058
+	.string "{COLOR BLUE}2VS2つうしんたいせん$" @TRANSLATION: "{COLOR BLUE}2v2 LINK$"
 
-gUnknown_Debug_083F8068:: @ 0x83F8068
-	.4byte gUnknown_Debug_083F802E, 0x100
-	.4byte gUnknown_Debug_083F8036, 0x108
-	.4byte gUnknown_Debug_083F803F, 0x209
-	.4byte gUnknown_Debug_083F8048, 0x10A
-	.4byte gUnknown_Debug_083F8058, 0x20B
+gBattleForDebug_BattleModes:: @ 0x83F8068
+	.4byte gBattleForDebug_WildBattle, 0x100
+	.4byte gBattleForDebug_SingleBattle, 0x108
+	.4byte gBattleForDebug_DoubleBattle, 0x209
+	.4byte gBattleForDebug_SingleLinkBattle, 0x10A
+	.4byte gBattleForDebug_DoubleLinkBattle, 0x20B
 
 gUnknown_Debug_083F8090:: @ 0x83F8090
 	.string "きほんタイプ$"
@@ -103,83 +107,84 @@ gUnknown_Debug_083F80D8:: @ 0x83F80D8
 	.4byte gUnknown_Debug_083F80C8, 0x100
 	.4byte gUnknown_Debug_083F80CF, 0x200
 
-gUnknown_Debug_083F8128:: @ 0x83F8128
-	.string "くさ$"
+@ Battle terrain
+gBattleForDebug_Terrain_Grass:: @ 0x83F8128
+	.string "くさ$" @TRANSLATION: "GRASS$"
 
-gUnknown_Debug_083F812B:: @ 0x83F812B
-	.string "ながい　くさ$"
+gBattleForDebug_Terrain_TallGrass:: @ 0x83F812B
+	.string "ながい　くさ$" @TRANSLATION: "TALL GRASS$"
 
-gUnknown_Debug_083F8132:: @ 0x83F8132
-	.string "すな$"
+gBattleForDebug_Terrain_Sand:: @ 0x83F8132
+	.string "すな$" @TRANSLATION: "SAND$"
 
-gUnknown_Debug_083F8135:: @ 0x83F8135
-	.string "みず$"
+gBattleForDebug_Terrain_Underwater:: @ 0x83F8135
+	.string "みず$" @TRANSLATION: "UNDERWATER$"
 
-gUnknown_Debug_083F8138:: @ 0x83F8138
-	.string "うみ$"
+gBattleForDebug_Terrain_Sea:: @ 0x83F8138
+	.string "うみ$" @TRANSLATION: "SEA$"
 
-gUnknown_Debug_083F813B:: @ 0x83F813B
-	.string "いけ$"
+gBattleForDebug_Terrain_Water:: @ 0x83F813B
+	.string "いけ$" @TRANSLATION: "WATER$"
 
-gUnknown_Debug_083F813E:: @ 0x83F813E
-	.string "いわ$"
+gBattleForDebug_Terrain_Rock:: @ 0x83F813E
+	.string "いわ$" @TRANSLATION: "ROCK$"
 
-gUnknown_Debug_083F8141:: @ 0x83F8141
-	.string "どうくつ$"
+gBattleForDebug_Terrain_Cave:: @ 0x83F8141
+	.string "どうくつ$" @TRANSLATION: "CAVE$"
 
-gUnknown_Debug_083F8146:: @ 0x83F8146
-	.string "そのた$"
+gBattleForDebug_Terrain_Other:: @ 0x83F8146
+	.string "そのた$" @TRANSLATION: "OTHER$"
 
 	.align 2
-gUnknown_Debug_083F814C:: @ 0x83F814C
-	.4byte gUnknown_Debug_083F8128, 0x0
-	.4byte gUnknown_Debug_083F812B, 0x1
-	.4byte gUnknown_Debug_083F8132, 0x2
-	.4byte gUnknown_Debug_083F8135, 0x3
-	.4byte gUnknown_Debug_083F8138, 0x4
-	.4byte gUnknown_Debug_083F813B, 0x5
-	.4byte gUnknown_Debug_083F813E, 0x6
-	.4byte gUnknown_Debug_083F8141, 0x7
-	.4byte gUnknown_Debug_083F8146, 0x8
+gBattleForDebug_BattleTerrains:: @ 0x83F814C
+	.4byte gBattleForDebug_Terrain_Grass, 0x0
+	.4byte gBattleForDebug_Terrain_TallGrass, 0x1
+	.4byte gBattleForDebug_Terrain_Sand, 0x2
+	.4byte gBattleForDebug_Terrain_Underwater, 0x3
+	.4byte gBattleForDebug_Terrain_Sea, 0x4
+	.4byte gBattleForDebug_Terrain_Water, 0x5
+	.4byte gBattleForDebug_Terrain_Rock, 0x6
+	.4byte gBattleForDebug_Terrain_Cave, 0x7
+	.4byte gBattleForDebug_Terrain_Other, 0x8
 
-gUnknown_Debug_083F8194:: @ 0x83F8194
-	.string "ポケモンを　えらんでね$"
+gBattleForDebug_ChooseAPokemon:: @ 0x83F8194
+	.string "ポケモンを　えらんでね$" @TRANSLATION: "Choose a {PKMN}$"
 
-gUnknown_Debug_083F81A0:: @ 0x83F81A0
-	.string "{COLOR RED}START:つぎへ$"
+gBattleForDebug_StartNext:: @ 0x83F81A0
+	.string "{COLOR RED}START:つぎへ$" @TRANSLATION: "START: GO$"
 
-gUnknown_Debug_083F81AD:: @ 0x83F81AD
-	.string "{COLOR RED}じぶんの　ポケモン$"
+gBattleForDebug_YourPokemon:: @ 0x83F81AD
+	.string "{COLOR RED}じぶんの　ポケモン$" @TRANSLATION: "{COLOR RED}Your {PKMN}$"
 
-gUnknown_Debug_083F81BA:: @ 0x83F81BA
-	.string "{COLOR RED}あいての　ポケモン$"
+gBattleForDebug_FoesPokemon:: @ 0x83F81BA
+	.string "{COLOR RED}あいての　ポケモン$" @TRANSLATION: "{COLOR RED}Foe’s {PKMN}$"
 
-gUnknown_Debug_083F81C7:: @ 0x83F81C7
-	.string "たいせんモードを　えらんでね$"
+gBattleForDebug_ChooseABattleMode:: @ 0x83F81C7
+	.string "たいせんモードを　えらんでね$" @TRANSLATION: "Choose a MODE$"
 
-gUnknown_Debug_083F81D6:: @ 0x83F81D6
-	.string "{COLOR RED}バトルモード　せんたく$"
+gBattleForDebug_BattleModesHeader:: @ 0x83F81D6
+	.string "{COLOR RED}バトルモード　せんたく$" @TRANSLATION: "{COLOR RED}BATTLE MODES$"
 
-gUnknown_Debug_083F81E5:: @ 0x83F81E5
-	.string "{COLOR RED}トレーナーAI　せんたく$"
+gBattleForDebug_AIFlagsHeader:: @ 0x83F81E5
+	.string "{COLOR RED}トレーナーAI　せんたく$" @TRANSLATION: "{COLOR RED}AI FLAGS
 
-gUnknown_Debug_083F81F5:: @ 0x83F81F5
-	.string "{COLOR RED}START:かいし$"
+gBattleForDebug_StartBattle:: @ 0x83F81F5
+	.string "{COLOR RED}START:かいし$" @TRANSLATION: "START:Btl $"
 
-gUnknown_Debug_083F8202:: @ 0x83F8202
-	.string "{COLOR RED}バトルちけい　せんたく$"
+gBattleForDebug_BattleTerrainsHeader:: @ 0x83F8202
+	.string "{COLOR RED}バトルちけい　せんたく$" @TRANSLATION: "{COLOR RED}TERRAIN$"
 
-gUnknown_Debug_083F8211:: @ 0x83F8211
-	.string "じぶんの　せいべつを　えらんでね$"
+gBattleForDebug_ChooseYourGender:: @ 0x83F8211
+	.string "じぶんの　せいべつを　えらんでね$" @TRANSLATION: "Your gender$"
 
-gUnknown_Debug_083F8222:: @ 0x83F8222
-	.string "{COLOR RED}せいべつ　せんたく$"
+gBattleForDebug_GenderHeader:: @ 0x83F8222
+	.string "{COLOR RED}せいべつ　せんたく$" @TRANSLATION: "{COLOR RED}GENDER$"
 
-gUnknown_Debug_083F822F:: @ 0x83F822F
-	.string "おとこ$"
+gBattleForDebug_GenderBoy:: @ 0x83F822F
+	.string "おとこ$" @TRANSLATION: "BOY$"
 
-gUnknown_Debug_083F8233:: @ 0x83F8233
-	.string "おんな$"
+gBattleForDebug_GenderGirl:: @ 0x83F8233
+	.string "おんな$" @TRANSLATION: "GIRL$"
 Str_83F8237:
 	.string "Kind$"
 
