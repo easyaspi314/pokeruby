@@ -2775,7 +2775,7 @@ debug_80C4AC4:
 ._255:
 	.word	gUnknown_Debug_2038A0C
 	.word	gMain
-	.word	gUnknown_Debug_083F80D8
+	.word	gBattleForDebug_AIFlags
 	.word	byte_3005E30
 	.word	0xffff
 ._253:
@@ -3021,7 +3021,7 @@ debug_80C4C44:
 ._289:
 	.align	2, 0
 ._288:
-	.word	gUnknown_Debug_083F80D8
+	.word	gBattleForDebug_AIFlags
 	.word	byte_3005E30
 ._286:
 	strb	r2, [r5, #0x2]
@@ -3913,7 +3913,7 @@ InitCreatePokemon:
 ._365:
 	.align	2, 0
 ._364:
-	.word	gUnknown_Debug_083F8733
+	.word	gDebug_CreatePokemon_Header
 	.word	0x4000050
 	.word	0x4000208
 	.word	0x4000200
@@ -4089,7 +4089,7 @@ debug_80C53F0:
 	.align	2, 0
 ._381:
 	.word	gUnknown_Debug_2038A1C
-	.word	gUnknown_Debug_083F872A
+	.word	gDebug_CreatePokemon_PokemonBox
 ._379:
 	ldr	r0, ._384
 	mov	r1, #0x4
@@ -4107,7 +4107,7 @@ debug_80C53F0:
 ._385:
 	.align	2, 0
 ._384:
-	.word	gUnknown_Debug_083F8720
+	.word	gDebug_CreatePokemon_PokemonList
 	.word	gTasks
 	.word	debug_80C5708+1
 ._378:
@@ -5757,8 +5757,8 @@ debug_80C5FFC:
 ._579:
 	.align	2, 0
 ._578:
-	.word	gUnknown_Debug_083F8758
-	.word	gUnknown_Debug_083F875C
+	.word	gDebug_CreatePokemon_Egg
+	.word	gDebug_CreatePokemon_OT
 	.word	gUnknown_Debug_2038A1C
 	.word	gUnknown_Debug_083F86E8+0x4
 
@@ -7034,16 +7034,16 @@ debug_80C6B00:
 	.align	2, 0
 ._666:
 	.word	gUnknown_Debug_083F8815
-	.word	gUnknown_Debug_083F87D0
-	.word	gUnknown_Debug_083F87D8
-	.word	gUnknown_Debug_083F87E0
+	.word	gPaletteViewer_L
+	.word	gPaletteViewer_R
+	.word	gPaletteViewer_IndexNum
 	.word	0x600fa56
 	.word	0xa311
-	.word	gUnknown_Debug_083F87F4
+	.word	gPaletteViewer_AEditColors
 	.word	0x600f256
 	.word	0x8301
 	.word	0x600f396
-	.word	gUnknown_Debug_083F8801
+	.word	gPaletteViewer_AOkBCancel
 	.word	0x600f3d6
 	.word	0x600f416
 	.word	0x4000040
@@ -8580,16 +8580,16 @@ debug_80C777C:
 	.align	2, 0
 ._784:
 	.word	gUnknown_Debug_083F8815
-	.word	gUnknown_Debug_083F87D0
-	.word	gUnknown_Debug_083F87D8
-	.word	gUnknown_Debug_083F87E0
+	.word	gPaletteViewer_L
+	.word	gPaletteViewer_R
+	.word	gPaletteViewer_IndexNum
 	.word	0x600fa56
 	.word	0xa311
-	.word	gUnknown_Debug_083F87F4
+	.word	gPaletteViewer_AEditColors
 	.word	0x600f256
 	.word	0x8301
 	.word	0x600f396
-	.word	gUnknown_Debug_083F8801
+	.word	gPaletteViewer_AOkBCancel
 	.word	0x600f3d6
 	.word	0x600f416
 	.word	0x4000040

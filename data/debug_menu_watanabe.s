@@ -12,7 +12,7 @@ gDebug_SizeComparison_Scale:: @ 0x83F7FD6
 	.string "ゆみあくひりつ$" @TRANSLATION: "{JPN}　　{ENG}Scale$"
 
 gDebug_SizeComparison_Position:: @ 0x83F7FDE
-	.string "たかさ$" @TRANSLATION: "Pos\.$"
+	.string "たかさ$" @TRANSLATION: "Pos.$"
 
 gDebug_SizeComparison_LeftSmaller:: @ 0x83F7FE2
 	.string "Lキー▶しゅくしょう$" @TRANSLATION: "{LEFT_ARROW}: Smaller$"
@@ -67,45 +67,45 @@ gBattleForDebug_BattleModes:: @ 0x83F8068
 gUnknown_Debug_083F8090:: @ 0x83F8090
 	.string "きほんタイプ$"
 
-gUnknown_Debug_083F8097:: @ 0x83F8097
-	.string "AIタイプ2$"
+gBattleForDebug_AIFlag2:: @ 0x83F8097
+	.string "AIタイプ2$" @TRANSLATION: "AI Flag 2$"
 
-gUnknown_Debug_083F809E:: @ 0x83F809E
+gBattleForDebug_AIFlag3:: @ 0x83F809E
 	.string "AIタイプ3$"
 
-gUnknown_Debug_083F80A5:: @ 0x83F80A5
+gBattleForDebug_AIFlag4:: @ 0x83F80A5
 	.string "AIタイプ4$"
 
-gUnknown_Debug_083F80AC:: @ 0x83F80AC
+gBattleForDebug_AIFlag5:: @ 0x83F80AC
 	.string "AIタイプ5$"
 
-gUnknown_Debug_083F80B3:: @ 0x83F80B3
+gBattleForDebug_AIFlag6:: @ 0x83F80B3
 	.string "AIタイプ6$"
 
-gUnknown_Debug_083F80BA:: @ 0x83F80BA
+gBattleForDebug_AIFlag7:: @ 0x83F80BA
 	.string "AIタイプ7$"
 
-gUnknown_Debug_083F80C1:: @ 0x83F80C1
+gBattleForDebug_AIFlag8:: @ 0x83F80C1
 	.string "AIタイプ8$"
 
-gUnknown_Debug_083F80C8:: @ 0x83F80C8
+gBattleForDebug_AIFlag9:: @ 0x83F80C8
 	.string "AIタイプ9$"
 
-gUnknown_Debug_083F80CF:: @ 0x83F80CF
+gBattleForDebug_AIFlag10:: @ 0x83F80CF
 	.string "AIタイプ10$"
 
 	.align 2
-gUnknown_Debug_083F80D8:: @ 0x83F80D8
+gBattleForDebug_AIFlags:: @ 0x83F80D8
 	.4byte gUnknown_Debug_083F8090, 0x1
-	.4byte gUnknown_Debug_083F8097, 0x2
-	.4byte gUnknown_Debug_083F809E, 0x4
-	.4byte gUnknown_Debug_083F80A5, 0x8
-	.4byte gUnknown_Debug_083F80AC, 0x10
-	.4byte gUnknown_Debug_083F80B3, 0x20
-	.4byte gUnknown_Debug_083F80BA, 0x40
-	.4byte gUnknown_Debug_083F80C1, 0x80
-	.4byte gUnknown_Debug_083F80C8, 0x100
-	.4byte gUnknown_Debug_083F80CF, 0x200
+	.4byte gBattleForDebug_AIFlag2, 0x2
+	.4byte gBattleForDebug_AIFlag3, 0x4
+	.4byte gBattleForDebug_AIFlag4, 0x8
+	.4byte gBattleForDebug_AIFlag5, 0x10
+	.4byte gBattleForDebug_AIFlag6, 0x20
+	.4byte gBattleForDebug_AIFlag7, 0x40
+	.4byte gBattleForDebug_AIFlag8, 0x80
+	.4byte gBattleForDebug_AIFlag9, 0x100
+	.4byte gBattleForDebug_AIFlag10, 0x200
 
 @ Battle terrain
 gBattleForDebug_Terrain_Grass:: @ 0x83F8128
@@ -601,19 +601,20 @@ gUnknown_Debug_083F86E8:: @ 0x83F86E8
 	.4byte gUnknown_Debug_083F86DC, 0x40
 	.4byte gUnknown_Debug_083F86E0, 0x80
 
-gUnknown_Debug_083F8720:: @ 0x83F8720
-	.string "PKMNワLIST$"
+gDebug_CreatePokemon_PokemonList:: @ 0x83F8720
+	.string "PKMNワLIST$" @TRANSLATION: "{PKMN} LIST$"
 
-gUnknown_Debug_083F872A:: @ 0x83F872A
-	.string "PKMNワBOX$"
+gDebug_CreatePokemon_PokemonBox:: @ 0x83F872A
+	.string "PKMNワBOX$" @TRANSLATION: "{PKMN} BOX$"
 
-gUnknown_Debug_083F8733:: @ 0x83F8733
-	.string "Create　POKひMON　　　LR:Shift　　START:Add$"
+gDebug_CreatePokemon_Header:: @ 0x83F8733
+	.string "Create　POKひMON　　　LR:Shift　　START:Add$" @TRANSLATION: "Create　POKéMON　　　LR:Shift　　START:Add$"
 
-gUnknown_Debug_083F8758:: @ 0x83F8758
-	.string "たまご$"
+gDebug_CreatePokemon_Egg:: @ 0x83F8758
+	.string "たまご$" @TRANSLATION: "EGG$"
 
-gUnknown_Debug_083F875C:: @ 0x83F875C
+@ The Trainer name used when generating Pokémon.
+gDebug_CreatePokemon_OT:: @ 0x83F875C
 	.string "DebugーG$"
 
 gUnknown_Debug_083F8764::
@@ -666,23 +667,23 @@ gUnknown_Debug_083F8790::
     .2byte 0x0004
     .2byte 0x0002
 
-gUnknown_Debug_083F87D0:: @ 0x83F87D0
+gPaletteViewer_L:: @ 0x83F87D0
 	.string "{COLOR RED}L{ESCAPE}ロ$"
 
-gUnknown_Debug_083F87D8:: @ 0x83F87D8
+gPaletteViewer_R:: @ 0x83F87D8
 	.string "{COLOR RED}{ESCAPE}ワR$"
 
-gUnknown_Debug_083F87E0:: @ 0x83F87E0
-	.string "かいはつナンバー$"
+gPaletteViewer_IndexNum:: @ 0x83F87E0
+	.string "かいはつナンバー$" @TRANSLATION: "INDEX No.$"
 
 gUnknown_Debug_083F87E9:: @ 0x83F87E9
 	.string "グラフィックナンバー$"
 
-gUnknown_Debug_083F87F4:: @ 0x83F87F4
-	.string "{COLOR RED}A:カラーせってい$"
+gPaletteViewer_AEditColors:: @ 0x83F87F4
+	.string "{COLOR RED}A:カラーせってい$" @TRANSLATION: "{COLOR RED}A: EDIT COLORS$"
 
-gUnknown_Debug_083F8801:: @ 0x83F8801
-	.string "{COLOR RED}A:けってい　B:キャンセル$"
+gPaletteViewer_AOkBCancel:: @ 0x83F8801
+	.string "{COLOR RED}A:けってい　B:キャンセル$" @TRANSLATION: "{COLOR RED}A: OK   B: CANCEL$"
 
 gUnknown_Debug_083F8813:: @ 0x83F8813
 	.string ":$"
