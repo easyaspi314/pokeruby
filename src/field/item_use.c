@@ -36,6 +36,7 @@
 #include "strings.h"
 #include "task.h"
 #include "constants/vars.h"
+#include "soar.h"
 
 extern void (*gFieldItemUseCallback)(u8);
 extern void (*gFieldCallback)(void);
@@ -1198,4 +1199,10 @@ void ItemUseInBattle_EnigmaBerry(u8 taskId)
 void ItemUseOutOfBattle_CannotUse(u8 taskId)
 {
     DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].data[2]);
+}
+
+// This is used by the yellow flute for now
+void ItemUseOutOfBattle_EonFlute(u8 taskId)
+{
+    SetMainCallback2(CB2_InitSoar);
 }

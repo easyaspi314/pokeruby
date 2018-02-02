@@ -393,6 +393,7 @@ SECTIONS {
         src/debug/unknown_debug_menu.o(.text);
         src/engine/name_string_util.o(.text);
         src/engine/menu_cursor.o(.text);
+        src/soar.o(.text);
     } =0
 
     script_data :

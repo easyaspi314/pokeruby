@@ -137,9 +137,9 @@ static const u16 sRegionMapBrendanIcon_Pal[] = INCBIN_U16("graphics/pokenav/bren
 static const u8 sRegionMapBrendanIcon_Image[] = INCBIN_U8("graphics/pokenav/brendan_icon.4bpp");
 static const u16 sRegionMapMayIcon_Pal[] = INCBIN_U16("graphics/pokenav/may_icon.gbapal");
 static const u8 sRegionMapMayIcon_Image[] = INCBIN_U8("graphics/pokenav/may_icon.4bpp");
-static const u16 sRegionMapBkgnd_Pal[] = INCBIN_U16("graphics/pokenav/region_map.gbapal");
-static const u8 sRegionMapBkgnd_ImageLZ[] = INCBIN_U8("graphics/pokenav/region_map.8bpp.lz");
-static const u8 sRegionMapBkgnd_TilemapLZ[] = INCBIN_U8("graphics/pokenav/region_map_map.bin.lz");
+const u16 sRegionMapBkgnd_Pal[] = INCBIN_U16("graphics/pokenav/region_map.gbapal");
+const u8 sRegionMapBkgnd_ImageLZ[] = INCBIN_U8("graphics/pokenav/region_map.8bpp.lz");
+const u8 sRegionMapBkgnd_TilemapLZ[] = INCBIN_U8("graphics/pokenav/region_map_map.bin.lz");
 
 #include "../data/region_map_layout.h"
 
