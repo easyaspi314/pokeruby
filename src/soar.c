@@ -69,14 +69,6 @@ static u8 sPlayerYaw;
 static u8 sPlayerPitch;
 static s32 sTest;
 
-// GPU affine params
-static u32 sSoarBgAffine_X;
-static u32 sSoarBgAffine_Y;
-static s16 sSoarBgAffine_PA;
-static s16 sSoarBgAffine_PB;
-static s16 sSoarBgAffine_PC;
-static s16 sSoarBgAffine_PD;
-
 static u8 sEonSpriteId;
 
 #define FIXED_POINT(iPart, fPart) (((iPart) << 8) | (fPart))
@@ -101,18 +93,6 @@ void CB2_InitSoar(void)
     BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
     SetMainCallback2(CB2_LoadSoarGraphics);
     gMain.state = 0;
-}
-
-//#define TO_SIGN_MAGNITUDE(n) ((n) >= 0 ? (n) : ((-n) | (1 << 15)))
-
-static void UpdateAffineBGRegs(void)
-{
-    REG_BG2X = sSoarBgAffine_X;
-    REG_BG2Y = sSoarBgAffine_Y;
-    REG_BG2PA = sSoarBgAffine_PA;
-    REG_BG2PB = sSoarBgAffine_PB;
-    REG_BG2PC = sSoarBgAffine_PC;
-    REG_BG2PD = sSoarBgAffine_PD;
 }
 
 static void CB2_LoadSoarGraphics(void)
@@ -141,14 +121,6 @@ static void CB2_LoadSoarGraphics(void)
                    | BGCNT_AFF512x512
                    | BGCNT_WRAP;
         REG_BLDCNT = BLDCNT_EFFECT_LIGHTEN | BLDCNT_TGT1_BD | BLDCNT_TGT1_BG2;
-        //REG_BLDY = 8;
-        sSoarBgAffine_PA = FIXED_POINT(1,0);
-        sSoarBgAffine_PB = FIXED_POINT(0,0);
-        sSoarBgAffine_PC = FIXED_POINT(0,0);
-        sSoarBgAffine_PD = FIXED_POINT(1,0);
-        sSoarBgAffine_X = 0;
-        sSoarBgAffine_Y = 0;
-        UpdateAffineBGRegs();
         gMain.state++;
         break;
     case 2:
@@ -211,25 +183,6 @@ static void SoarHBlankCallback(void)
     int sinYaw = gSineTable[sPlayerYaw];
     int cosYaw = gSineTable[sPlayerYaw + 64];
 
-    /*
-    int vcount = REG_VCOUNT;
-    int lam, xs, ys;
-
-    //if (vcount > 32)
-    //{
-        
-    lam = (10 << 8) * ((1 << 16) / vcount)>> (24-SHIFT_AMT);  // .8*.16/.12 = .12
-
-    xs = 120*lam;
-    ys = 120*lam;
-
-    REG_BG2PA = (cosYaw * lam) >> SHIFT_AMT;
-    REG_BG2PC = (sinYaw * lam) >> SHIFT_AMT;
-
-    REG_BG2X = sPlayerPosX - ((xs * cosYaw - ys * sinYaw) >> SHIFT_AMT);
-    REG_BG2Y = sPlayerPosY - ((xs * sinYaw + ys * cosYaw) >> SHIFT_AMT); 
-    //}
-    */
     int lam, lcf, lsf, lxr, lyr;
     int vcount = REG_VCOUNT;
 
@@ -397,25 +350,10 @@ static void CB2_HandleInput(void)
         sPlayerPosY += sinYaw;
     }
     */
-
-    // Set which pixel will appear at the top left of the screen
-    // This is adjusted so that the pixel at (sPlayerPosX, sPlayerPosY) is always
-    // at the center of the screen.
-    sSoarBgAffine_X = sPlayerPosX - ((DISPLAY_WIDTH / 2) * cosYaw - (DISPLAY_HEIGHT / 2) * sinYaw);
-    sSoarBgAffine_Y = sPlayerPosY - ((DISPLAY_HEIGHT / 2) * cosYaw + (DISPLAY_WIDTH / 2) * sinYaw);
-    
-    // Adjust rotation parameters
-    sSoarBgAffine_PA =  cosYaw;
-    sSoarBgAffine_PB = -sinYaw;
-    sSoarBgAffine_PC =  sinYaw;
-    sSoarBgAffine_PD =  cosYaw;
-
 #if DEBUG
     //PrintDebugInfo();
 #endif
 
-    //UpdateAffineBGRegs();
-    
     BuildOamBuffer();
     AnimateSprites();
 }
