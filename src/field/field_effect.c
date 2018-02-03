@@ -1067,6 +1067,7 @@ void SpriteCB_HallOfFameMonitor(struct Sprite *sprite)
 }
 
 void mapldr_080842E8(void);
+void mapldr_080842E8_2(void);
 void mapldr_08084390(void);
 void task00_8084310(u8);
 void c3_080843F8(u8);
@@ -1077,10 +1078,28 @@ void sub_80865BC(void)
     gFieldCallback = mapldr_080842E8;
 }
 
+void Fldeff_FlyLand(void)
+{
+    SetMainCallback2(c2_exit_to_overworld_2_switch);
+    gFieldCallback = mapldr_080842E8_2;
+}
+
 void mapldr_080842E8(void)
 {
     pal_fill_black();
     CreateTask(task00_8084310, 0);
+    ScriptContext2_Enable();
+    FreezeMapObjects();
+    gFieldCallback = NULL;
+}
+
+void mapldr_080842E8_2(void)
+{
+    u8 taskId;
+
+    pal_fill_black();
+    taskId = CreateTask(task00_8084310, 0);
+    gTasks[taskId].data[0] = 1;  // do landing anim only
     ScriptContext2_Enable();
     FreezeMapObjects();
     gFieldCallback = NULL;
