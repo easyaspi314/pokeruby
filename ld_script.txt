@@ -659,6 +659,7 @@ SECTIONS {
         data/strings2.o(.rodata);
         src/engine/menu_cursor.o(.rodata);
         src/engine/mystery_event_msg.o(.rodata);
+		src/soar.o(.rodata);
         src/libs/m4a_tables.o(.rodata);
         data/sound_data.o(.rodata);
     } =0
