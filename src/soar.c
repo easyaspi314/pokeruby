@@ -297,7 +297,7 @@ static void UpdateMapSectionPopup(void)
     }
 }
 
-static const u8 sText_LandHere[] = _("Land here?");
+static const u8 sText_LandHere[] = _("Land here?\nA: Land    B: Cancel");
 
 static void ExitSoar(void)
 {
