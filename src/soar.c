@@ -1,5 +1,6 @@
 #include "global.h"
 #include "constants/songs.h"
+#include "decompress.h"
 #include "main.h"
 #include "menu.h"
 #include "overworld.h"
@@ -7,21 +8,59 @@
 #include "scanline_effect.h"
 #include "soar.h"
 #include "sound.h"
+#include "sprite.h"
 #include "task.h"
 #include "trig.h"
 
 #define DEBUG 1
+
+#define NOCASH_BREAKPOINT asm("mov r11, r11")
+
+static void CB2_LoadSoarGraphics(void);
+static void SoarVBlankCallback(void);
+static void SoarHBlankCallback(void);
+static void EonSpriteCallback(struct Sprite *sprite);
+static void CB2_HandleInput(void);
+static void CB2_FadeOut(void);
 
 // For now, just use the region map graphics
 extern const u16 sRegionMapBkgnd_Pal[];
 extern const u8 sRegionMapBkgnd_ImageLZ[];
 extern const u8 sRegionMapBkgnd_TilemapLZ[];
 
-static void CB2_LoadSoarGraphics(void);
-static void SoarVBlankCallback(void);
-static void SoarHBlankCallback(void);
-static void CB2_HandleInput(void);
-static void CB2_FadeOut(void);
+static const u8 sEonSpriteTiles[] = INCBIN_U8("graphics/intro/intro1_eon.4bpp.lz");
+static const u16 sEonSpritePaletteData[16] = {0, RGB(4, 4, 16)};
+
+static const struct OamData sEonSpriteOamData =
+{
+    .y = DISPLAY_HEIGHT / 2,
+    .affineMode = 3,
+    .objMode = 0,
+    .mosaic = 0,
+    .bpp = 0,
+    .shape = 1,
+    .x = DISPLAY_WIDTH / 2,
+    .matrixNum = 0,
+    .size = 3,
+    .tileNum = 0,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+static const struct SpriteTemplate sEonSpriteTemplate =
+{
+    .tileTag = 9999,
+    .paletteTag = 9999,
+    .oam = &sEonSpriteOamData,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = NULL,
+    .callback = SpriteCallbackDummy,
+};
+
+static const struct CompressedSpriteSheet sEonSpriteSheet = {sEonSpriteTiles, sizeof(sEonSpriteTiles), 9999};
+static const struct SpritePalette sEonSpritePalette = {sEonSpritePaletteData, 9999};
 
 static s32 sPlayerPosX;
 static s32 sPlayerPosY;
@@ -37,6 +76,8 @@ static s16 sSoarBgAffine_PA;
 static s16 sSoarBgAffine_PB;
 static s16 sSoarBgAffine_PC;
 static s16 sSoarBgAffine_PD;
+
+static u8 sEonSpriteId;
 
 #define FIXED_POINT(iPart, fPart) (((iPart) << 8) | (fPart))
 
@@ -90,13 +131,17 @@ static void CB2_LoadSoarGraphics(void)
         LZ77UnCompVram(sRegionMapBkgnd_TilemapLZ, (void *)(VRAM + 8 * 0x800));
         LoadPalette(sRegionMapBkgnd_Pal, 0x70, 64);
 
+        LZ77UnCompVram(sEonSpriteTiles, (void *)(VRAM + 0x10000));
         // Set up video regs
-        REG_DISPCNT = DISPCNT_MODE_1 | DISPCNT_BG2_ON;
+        REG_DISPCNT = DISPCNT_MODE_1 | DISPCNT_BG2_ON | DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP;
         REG_BG2CNT = BGCNT_PRIORITY(0)
                    | BGCNT_256COLOR
                    | BGCNT_CHARBASE(2)
                    | BGCNT_SCREENBASE(8)
-                   | BGCNT_AFF512x512;
+                   | BGCNT_AFF512x512
+                   | BGCNT_WRAP;
+        REG_BLDCNT = BLDCNT_EFFECT_LIGHTEN | BLDCNT_TGT1_BD | BLDCNT_TGT1_BG2;
+        //REG_BLDY = 8;
         sSoarBgAffine_PA = FIXED_POINT(1,0);
         sSoarBgAffine_PB = FIXED_POINT(0,0);
         sSoarBgAffine_PC = FIXED_POINT(0,0);
@@ -122,11 +167,22 @@ static void CB2_LoadSoarGraphics(void)
             SetMainCallback2(CB2_HandleInput);
             SetVBlankCallback(SoarVBlankCallback);
             SetHBlankCallback(SoarHBlankCallback);
-            
+
             REG_IME = 0;
             REG_IE |= INTR_FLAG_VBLANK | INTR_FLAG_HBLANK;
             REG_IME = 1;
             REG_DISPSTAT |= DISPSTAT_VBLANK_INTR | DISPSTAT_HBLANK_INTR;
+            
+            // set backdrop color
+            ((u16 *)PLTT)[0] = RGB(8, 8, 20);
+            
+            LoadCompressedObjectPic(&sEonSpriteSheet);
+            LoadSpritePalette(&sEonSpritePalette);  // why doesn't this work?
+            sEonSpriteId = CreateSprite(&sEonSpriteTemplate, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, 0);
+            
+            // HACK! Please use the right palette
+            gSprites[sEonSpriteId].oam.paletteNum = 0;
+            ((u16 *)PLTT)[0x100 + 1] = RGB(4, 4, 16);
         }
         break;
     }
@@ -134,14 +190,17 @@ static void CB2_LoadSoarGraphics(void)
 
 static void SoarVBlankCallback(void)
 {
-    //ScanlineEffect_InitHBlankDmaTransfer();
-    //UpdateAffineBGRegs();
+    LoadOam();
+    ProcessSpriteCopyRequests();
+
     REG_BG2X = 0;
     REG_BG2Y = 0;
     REG_BG2PA = 0;
     REG_BG2PB = 0;
     REG_BG2PC = 0;
     REG_BG2PD = 0;
+    
+    REG_DISPCNT &= ~DISPCNT_BG2_ON;
 }
 
 #define SHIFT_AMT 12
@@ -172,8 +231,25 @@ static void SoarHBlankCallback(void)
     //}
     */
     int lam, lcf, lsf, lxr, lyr;
+    int vcount = REG_VCOUNT;
 
-    lam= (10 << 8) * ((1 << 16) / REG_VCOUNT)>>12;  // .8*.16 /.12 = 20.12
+    if (vcount < 32)
+    {
+        REG_DISPCNT &= ~DISPCNT_BG2_ON;
+        REG_BLDY = vcount / 2;
+        return;
+    }
+    else
+    {
+        REG_DISPCNT |= DISPCNT_BG2_ON;
+        
+        if (vcount <= 16 * 6)
+            REG_BLDY = 16 - (vcount / 6);
+        else
+            REG_BLDY = 0;
+    }
+
+    lam= (10 << 8) * ((1 << 16) / (vcount - 32))>>12;  // .8*.16 /.12 = 20.12
     lcf= lam*cosYaw>>8;                     // .12*.8 /.8 = .12
     lsf= lam*sinYaw>>8;                     // .12*.8 /.8 = .12
 
@@ -202,6 +278,34 @@ void PrintDebugInfo(void)
 }
 #endif
 
+#define spTiltDir   data[0]
+#define spTiltAngle data[1]
+
+static void UpdateEonSpriteRotation(struct Sprite *sprite)
+{
+    const int TILT_MAX = 0x1000;
+    const int TILT_STEP = 0x100;
+
+    switch (sprite->spTiltDir)
+    {
+    case 0:
+        if (sprite->spTiltAngle > 0)
+            sprite->spTiltAngle -= TILT_STEP;
+        else if (sprite->spTiltAngle < 0)
+            sprite->spTiltAngle += TILT_STEP;
+        break;
+    case 1:
+        if (sprite->spTiltAngle < TILT_MAX)
+            sprite->spTiltAngle += TILT_STEP;
+        break;
+    case -1:
+        if (sprite->spTiltAngle > -TILT_MAX)
+            sprite->spTiltAngle -= TILT_STEP;
+        break;
+    }
+    SetOamMatrixRotationScaling(sprite->oam.matrixNum, 1 << 8, 1 << 8, -sprite->spTiltAngle);
+}
+
 static void CB2_HandleInput(void)
 {
     int sinYaw;
@@ -213,10 +317,17 @@ static void CB2_HandleInput(void)
         BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
         SetVBlankCallback(NULL);
         SetHBlankCallback(NULL);
+        
+        REG_IME = 0;
+        REG_IE &= ~(INTR_FLAG_VBLANK | INTR_FLAG_HBLANK);
+        REG_IME = 1;
+        REG_DISPSTAT &= ~(DISPSTAT_VBLANK_INTR | DISPSTAT_HBLANK_INTR);
+
         SetMainCallback2(CB2_FadeOut);
         return;
     }
 
+    /*
     if (gMain.heldKeys & L_BUTTON)
         sPlayerYaw--;
     if (gMain.heldKeys & R_BUTTON)
@@ -245,6 +356,47 @@ static void CB2_HandleInput(void)
         sPlayerPosX += cosYaw;
         sPlayerPosY += sinYaw;
     }
+    */
+    gSprites[sEonSpriteId].spTiltDir = 0;
+
+    if (gMain.heldKeys & DPAD_LEFT)
+    {
+        sPlayerYaw--;
+        gSprites[sEonSpriteId].spTiltDir = -1;
+    }
+    if (gMain.heldKeys & DPAD_RIGHT)
+    {
+        sPlayerYaw++;
+        gSprites[sEonSpriteId].spTiltDir = 1;
+    }
+    
+    UpdateEonSpriteRotation(&gSprites[sEonSpriteId]);
+
+    sinYaw = gSineTable[sPlayerYaw];
+    cosYaw = gSineTable[sPlayerYaw + 64];
+
+    //if (gMain.heldKeys & A_BUTTON)
+    {
+        sPlayerPosX += sinYaw / 4;
+        sPlayerPosY -= cosYaw / 4;
+    }
+    /*
+    if (gMain.heldKeys & DPAD_DOWN)
+    {
+        sPlayerPosX -= sinYaw;
+        sPlayerPosY += cosYaw;
+    }
+    if (gMain.heldKeys & DPAD_LEFT)
+    {
+        sPlayerPosX -= cosYaw;
+        sPlayerPosY -= sinYaw;
+    }
+    if (gMain.heldKeys & DPAD_RIGHT)
+    {
+        sPlayerPosX += cosYaw;
+        sPlayerPosY += sinYaw;
+    }
+    */
 
     // Set which pixel will appear at the top left of the screen
     // This is adjusted so that the pixel at (sPlayerPosX, sPlayerPosY) is always
@@ -263,10 +415,13 @@ static void CB2_HandleInput(void)
 #endif
 
     //UpdateAffineBGRegs();
+    
+    BuildOamBuffer();
+    AnimateSprites();
 }
 
 static void CB2_FadeOut(void)
 {
-    if (!UpdatePaletteFade())
+    //if (!UpdatePaletteFade())
         SetMainCallback2(sub_805469C);
 }
