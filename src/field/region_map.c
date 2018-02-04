@@ -605,7 +605,7 @@ static u16 GetRegionMapSectionAt(u16 x, u16 y)
     return sRegionMapLayout[x + y * 28];
 }
 
-static void InitializeCursorPosition(void)
+void RegionMap_GetSectionCoordsFromCurrFieldPos(u16 *mapSectionId, u16 *cursorPosX, u16 *cursorPosY, bool8 *playerIsInCave)
 {
     struct MapHeader *mapHeader;
     u16 mapWidth;
@@ -632,20 +632,20 @@ static void InitializeCursorPosition(void)
     case 2:
     case 4:
     case 5:
-        gRegionMap->mapSectionId = gMapHeader.regionMapSectionId;
-        gRegionMap->playerIsInCave = FALSE;
+        *mapSectionId = gMapHeader.regionMapSectionId;
+        *playerIsInCave = FALSE;
         mapWidth = gMapHeader.mapData->width;
         mapHeight = gMapHeader.mapData->height;
         x = gSaveBlock1.pos.x;
         y = gSaveBlock1.pos.y;
-        if (gRegionMap->mapSectionId == MAPSEC_UNDERWATER6)
-            gRegionMap->playerIsInCave = TRUE;
+        if (*mapSectionId == MAPSEC_UNDERWATER6)
+            *playerIsInCave = TRUE;
         break;
     case 3:
     case 6:
         mapHeader = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1.warp4.mapGroup, gSaveBlock1.warp4.mapNum);
-        gRegionMap->mapSectionId = mapHeader->regionMapSectionId;
-        gRegionMap->playerIsInCave = TRUE;
+        *mapSectionId = mapHeader->regionMapSectionId;
+        *playerIsInCave = TRUE;
         mapWidth = mapHeader->mapData->width;
         mapHeight = mapHeader->mapData->height;
         x = gSaveBlock1.warp4.x;
@@ -653,8 +653,8 @@ static void InitializeCursorPosition(void)
         break;
     case 8:
         mapHeader = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1.warp2.mapGroup, gSaveBlock1.warp2.mapNum);
-        gRegionMap->mapSectionId = mapHeader->regionMapSectionId;
-        gRegionMap->playerIsInCave = TRUE;
+        *mapSectionId = mapHeader->regionMapSectionId;
+        *playerIsInCave = TRUE;
         mapWidth = mapHeader->mapData->width;
         mapHeight = mapHeader->mapData->height;
         x = gSaveBlock1.warp2.x;
@@ -664,8 +664,8 @@ static void InitializeCursorPosition(void)
         {
             struct WarpData *r4;
 
-            gRegionMap->mapSectionId = gMapHeader.regionMapSectionId;
-            if (gRegionMap->mapSectionId != MAPSEC_UNK_0x57)
+            *mapSectionId = gMapHeader.regionMapSectionId;
+            if (*mapSectionId != MAPSEC_UNK_0x57)
             {
                 r4 = &gSaveBlock1.warp4;
                 mapHeader = Overworld_GetMapHeaderByGroupAndId(r4->mapGroup, r4->mapNum);
@@ -674,9 +674,9 @@ static void InitializeCursorPosition(void)
             {
                 r4 = &gSaveBlock1.warp2;
                 mapHeader = Overworld_GetMapHeaderByGroupAndId(r4->mapGroup, r4->mapNum);
-                gRegionMap->mapSectionId = mapHeader->regionMapSectionId;
+                *mapSectionId = mapHeader->regionMapSectionId;
             }
-            gRegionMap->playerIsInCave = FALSE;
+            *playerIsInCave = FALSE;
             mapWidth = mapHeader->mapData->width;
             mapHeight = mapHeader->mapData->height;
             x = r4->x;
@@ -687,21 +687,21 @@ static void InitializeCursorPosition(void)
 
     r9 = x;
 
-    r1 = mapWidth / gRegionMapLocations[gRegionMap->mapSectionId].width;
+    r1 = mapWidth / gRegionMapLocations[*mapSectionId].width;
     if (r1 == 0)
         r1 = 1;
     x /= r1;
-    if (x >= gRegionMapLocations[gRegionMap->mapSectionId].width)
-        x = gRegionMapLocations[gRegionMap->mapSectionId].width - 1;
+    if (x >= gRegionMapLocations[*mapSectionId].width)
+        x = gRegionMapLocations[*mapSectionId].width - 1;
 
-    r1 = mapHeight / gRegionMapLocations[gRegionMap->mapSectionId].height;
+    r1 = mapHeight / gRegionMapLocations[*mapSectionId].height;
     if (r1 == 0)
         r1 = 1;
     y /= r1;
-    if (y >= gRegionMapLocations[gRegionMap->mapSectionId].height)
-        y = gRegionMapLocations[gRegionMap->mapSectionId].height - 1;
+    if (y >= gRegionMapLocations[*mapSectionId].height)
+        y = gRegionMapLocations[*mapSectionId].height - 1;
 
-    switch (gRegionMap->mapSectionId)
+    switch (*mapSectionId)
     {
     case MAPSEC_ROUTE_114:
         if (y != 0)
@@ -730,8 +730,14 @@ static void InitializeCursorPosition(void)
             x++;
         break;
     }
-    gRegionMap->cursorPosX = gRegionMapLocations[gRegionMap->mapSectionId].x + x + MAPCURSOR_X_MIN;
-    gRegionMap->cursorPosY = gRegionMapLocations[gRegionMap->mapSectionId].y + y + MAPCURSOR_Y_MIN;
+    *cursorPosX = gRegionMapLocations[*mapSectionId].x + x + MAPCURSOR_X_MIN;
+    *cursorPosY = gRegionMapLocations[*mapSectionId].y + y + MAPCURSOR_Y_MIN;
+}
+
+static void InitializeCursorPosition(void)
+{
+    RegionMap_GetSectionCoordsFromCurrFieldPos(&gRegionMap->mapSectionId,
+      &gRegionMap->cursorPosX, &gRegionMap->cursorPosY, &gRegionMap->playerIsInCave);
 }
 
 static void sub_80FB600(void)

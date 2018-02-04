@@ -35,8 +35,17 @@ extern const u16 sRegionMapBkgnd_Pal[];
 extern const u8 sRegionMapBkgnd_ImageLZ[];
 extern const u8 sRegionMapBkgnd_TilemapLZ[];
 
-static const u8 sEonSpriteTiles[] = INCBIN_U8("graphics/intro/intro1_eon.4bpp.lz");
-static const u16 sEonSpritePaletteData[16] = {0, RGB(4, 4, 16)};
+#if SAPPHIRE
+static const u8 sEonBrendanSpriteTiles[]       = INCBIN_U8("graphics/soar/latias_brendan.4bpp.lz");
+static const u8 sEonBrendanSpritePaletteData[] = INCBIN_U8("graphics/soar/latias_brendan.gbapal.lz");
+static const u8 sEonMaySpriteTiles[]           = INCBIN_U8("graphics/soar/latias_brendan.4bpp.lz");
+static const u8 sEonMaySpritePaletteData[]     = INCBIN_U8("graphics/soar/latias_brendan.gbapal.lz");
+#else
+static const u8 sEonBrendanSpriteTiles[]       = INCBIN_U8("graphics/soar/latios_brendan.4bpp.lz");
+static const u8 sEonBrendanSpritePaletteData[] = INCBIN_U8("graphics/soar/latios_brendan.gbapal.lz");
+static const u8 sEonMaySpriteTiles[]           = INCBIN_U8("graphics/soar/latios_brendan.4bpp.lz");
+static const u8 sEonMaySpritePaletteData[]     = INCBIN_U8("graphics/soar/latios_brendan.gbapal.lz");
+#endif
 
 static const struct OamData sEonSpriteOamData =
 {
@@ -66,8 +75,36 @@ static const struct SpriteTemplate sEonSpriteTemplate =
     .callback = SpriteCallbackDummy,
 };
 
-static const struct CompressedSpriteSheet sEonSpriteSheet = {sEonSpriteTiles, sizeof(sEonSpriteTiles), 9999};
-static const struct SpritePalette sEonSpritePalette = {sEonSpritePaletteData, 9999};
+static const u8 sShadowSpriteTiles[] = INCBIN_U8("graphics/soar/shadow.4bpp.lz");
+static const struct CompressedSpriteSheet sShadowSpriteSheet = {sShadowSpriteTiles, 1024, 9999};
+
+static const struct OamData sShadowSpriteOamData =
+{
+    .y = 0,
+    .affineMode = 0,
+    .objMode = 2,
+    .mosaic = 0,
+    .bpp = 0,
+    .shape = 1,
+    .x = 0,
+    .matrixNum = 0,
+    .size = 3,
+    .tileNum = 16,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+static const struct SpriteTemplate sShadowSpriteTemplate =
+{
+    .tileTag = 9998,
+    .paletteTag = 9998,
+    .oam = &sShadowSpriteOamData,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = NULL,
+    .callback = SpriteCallbackDummy,
+};
 
 static const struct {u8 left; u8 top; u8 right; u8 bottom;} sPopupWindowRect = {0, 0, 15, 3};
 
@@ -76,20 +113,25 @@ static s32 sPlayerPosY;
 static s32 sPlayerPosZ;
 static u8 sPlayerYaw;
 static u8 sPlayerPitch;
-static s32 sTest;
+static u16 sPrevMapSection;
 
 static u8 sEonSpriteId;
+static u8 sShadowSpriteId;
 
-#define FIXED_POINT(iPart, fPart) (((iPart) << 8) | (fPart))
+#define Q_8_8(iPart, fPart) (((iPart) << 8) | (fPart))
 
 void CB2_InitSoar(void)
 {
-    sPlayerPosX = 32 << 8;
-    sPlayerPosY = 32 << 8;
-    sPlayerPosZ = 6 << 8;
+    u16 cursorX, cursorY;
+    bool8 inCave;
+
+    RegionMap_GetSectionCoordsFromCurrFieldPos(&sPrevMapSection, &cursorX, &cursorY, &inCave);
+
+    sPlayerPosX = Q_8_8(cursorX * 8, 0);
+    sPlayerPosY = Q_8_8(cursorY * 8, 0);
+    sPlayerPosZ = Q_8_8(6, 0);
     sPlayerYaw = 0;
     sPlayerPitch = 0;
-    sTest = 0;
 
     // some of these may not be necessary, but I'm just being safe
     ScanlineEffect_Stop();
@@ -102,6 +144,30 @@ void CB2_InitSoar(void)
     BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
     SetMainCallback2(CB2_LoadSoarGraphics);
     gMain.state = 0;
+}
+
+static void LoadEonGraphics(void)
+{
+    struct CompressedSpriteSheet sEonSpriteSheet = {.size = 1024, .tag = 9999};
+    struct CompressedSpritePalette sEonSpritePalette = {.tag = 9999};
+
+    if (gSaveBlock2.playerGender == MALE)
+    {
+        sEonSpriteSheet.data = sEonBrendanSpriteTiles;
+        sEonSpritePalette.data = sEonBrendanSpritePaletteData;
+    }
+    else
+    {
+        sEonSpriteSheet.data = sEonMaySpriteTiles;
+        sEonSpritePalette.data = sEonMaySpritePaletteData;
+    }
+
+    LoadCompressedObjectPic(&sEonSpriteSheet);
+    LoadCompressedObjectPalette(&sEonSpritePalette);
+    sEonSpriteId = CreateSprite(&sEonSpriteTemplate, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, 0);
+    gSprites[sEonSpriteId].data[0] = 0;
+    gSprites[sEonSpriteId].data[1] = 0;
+    gSprites[sEonSpriteId].data[2] = 0;
 }
 
 static void CB2_LoadSoarGraphics(void)
@@ -123,9 +189,12 @@ static void CB2_LoadSoarGraphics(void)
         LZ77UnCompVram(sRegionMapBkgnd_TilemapLZ, (void *)(VRAM + 2 * 0x800));
         LoadPalette(sRegionMapBkgnd_Pal, 0x70, 64);
 
+        LoadEonGraphics();
+
         gPlttBufferUnfaded[0] = RGB(8, 8, 20);
 
-        LZ77UnCompVram(sEonSpriteTiles, (void *)(VRAM + 0x10000));
+        //LZ77UnCompVram(sEonSpriteTiles, (void *)(VRAM + 0x10000));
+        //LZ77UnCompVram(sShadowSpriteTiles, (void *)(VRAM + 0x10000 + 0x400));
         // Set up video regs
         REG_DISPCNT = DISPCNT_MODE_1 | DISPCNT_BG2_ON | DISPCNT_OBJ_ON | DISPCNT_OBJ_1D_MAP;
         //REG_BG0CNT = BGCNT_PRIORITY(0)
@@ -137,7 +206,6 @@ static void CB2_LoadSoarGraphics(void)
                    | BGCNT_SCREENBASE(2)
                    | BGCNT_AFF512x512
                    | BGCNT_WRAP;
-        REG_BLDCNT = BLDCNT_EFFECT_LIGHTEN | BLDCNT_TGT1_BD | BLDCNT_TGT1_BG2;
         gMain.state++;
         break;
     case 2:
@@ -160,16 +228,12 @@ static void CB2_LoadSoarGraphics(void)
             REG_IME = 1;
             REG_DISPSTAT |= DISPSTAT_VBLANK_INTR | DISPSTAT_HBLANK_INTR;
             
-            // set backdrop color
-            //((u16 *)PLTT)[0] = RGB(8, 8, 20);
-            
-            LoadCompressedObjectPic(&sEonSpriteSheet);
-            LoadSpritePalette(&sEonSpritePalette);  // why doesn't this work?
-            sEonSpriteId = CreateSprite(&sEonSpriteTemplate, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, 0);
+            LoadCompressedObjectPic(&sShadowSpriteSheet);
+            sShadowSpriteId = CreateSprite(&sShadowSpriteTemplate, DISPLAY_WIDTH / 2, 3 * DISPLAY_HEIGHT / 4, 0);
 
             // HACK! Please use the right palette
-            gSprites[sEonSpriteId].oam.paletteNum = 0;
-            ((u16 *)PLTT)[0x100 + 1] = RGB(4, 4, 16);
+            //gSprites[sEonSpriteId].oam.paletteNum = 0;
+            //((u16 *)PLTT)[0x100 + 1] = RGB(4, 4, 16);
         }
         BeginNormalPaletteFade(0xFFFFFFFF, 0, 16, 0, 0);
         gMain.state++;
@@ -194,6 +258,7 @@ static void SoarVBlankCallback(void)
     REG_BG2PC = 0;
     REG_BG2PD = 0;
 
+    // Turn off BG for first scanline
     REG_DISPCNT &= ~DISPCNT_BG2_ON;
     
     TransferPlttBuffer();
@@ -203,29 +268,45 @@ static void SoarVBlankCallback(void)
 
 static void SoarHBlankCallback(void)
 {
+    const unsigned int bldcntFog = BLDCNT_EFFECT_LIGHTEN | BLDCNT_TGT1_BD | BLDCNT_TGT1_BG2;
+    const unsigned int bldcntShadow = BLDCNT_EFFECT_DARKEN | BLDCNT_TGT1_BG2;
     int sinYaw = gSineTable[sPlayerYaw];
     int cosYaw = gSineTable[sPlayerYaw + 64];
 
     int lam, lcf, lsf, lxr, lyr;
-    int vcount = REG_VCOUNT;
+    int currScanline = REG_VCOUNT - 1;
 
-    if (vcount < 32)
+    if (currScanline > 159)  // We're in vblank. Nothing to do.
+        return;
+    if (currScanline < 32)  // draw gradient for sky
     {
         REG_DISPCNT &= ~DISPCNT_BG2_ON;
-        REG_BLDY = vcount / 2;
+        REG_BLDCNT = bldcntFog;
+        REG_BLDY = currScanline / 2;
         return;
+    }
+
+    if (currScanline == 32)
+        REG_DISPCNT |= DISPCNT_BG2_ON;
+
+    if (currScanline <= 16 * 6)
+    {
+        REG_BLDCNT = bldcntFog;
+        REG_BLDY = 16 - (currScanline / 6);
     }
     else
     {
-        REG_DISPCNT |= DISPCNT_BG2_ON;
-        
-        if (vcount <= 16 * 6)
-            REG_BLDY = 16 - (vcount / 6);
-        else
-            REG_BLDY = 0;
+        // TODO: get shadows working
+        /*
+        REG_WININ |= 1 << 5;
+        REG_DISPCNT |= DISPCNT_OBJWIN_ON;
+        REG_BLDCNT = bldcntShadow;
+        REG_BLDY = 8;
+        */
+        REG_BLDCNT = 0;
     }
 
-    lam= sPlayerPosZ * ((1 << 16) / (vcount - 32))>>12;  // .8*.16 /.12 = 20.12
+    lam= sPlayerPosZ * ((1 << 16) / (currScanline - 32))>>12;  // .8*.16 /.12 = 20.12
     lcf= lam*cosYaw>>8;                     // .12*.8 /.8 = .12
     lsf= lam*sinYaw>>8;                     // .12*.8 /.8 = .12
 
@@ -246,35 +327,69 @@ static void SoarHBlankCallback(void)
     REG_BG2Y= sPlayerPosY - lxr - lyr;
 }
 
-#define spTiltDir   data[0]
-#define spTiltAngle data[1]
+#define spTiltAngle data[0]
+#define spBarrelRollDir data[1]
+#define spDestAngle data[2]
+#define spFlipped data[3]
+
+#define TILT_MAX 0x1000
+#define TILT_MIN -0x1000
+#define TILT_STEP 0x100
 
 static void UpdateEonSpriteRotation(struct Sprite *sprite)
 {
-    const int TILT_MAX = 0x1000;
-    const int TILT_STEP = 0x100;
+    int rollTarget;
 
-    switch (sprite->spTiltDir)
+    switch (sprite->spBarrelRollDir)
     {
-    case 0:
-        if (sprite->spTiltAngle > 0)
-            sprite->spTiltAngle -= TILT_STEP;
-        else if (sprite->spTiltAngle < 0)
+    case 0:  // no barrel roll
+        if (sprite->spTiltAngle < sprite->spDestAngle)
             sprite->spTiltAngle += TILT_STEP;
-        break;
-    case 1:
-        if (sprite->spTiltAngle < TILT_MAX)
-            sprite->spTiltAngle += TILT_STEP;
-        break;
-    case -1:
-        if (sprite->spTiltAngle > -TILT_MAX)
+        else if (sprite->spTiltAngle > sprite->spDestAngle)
             sprite->spTiltAngle -= TILT_STEP;
+        break;
+    default:
+        if (sprite->spBarrelRollDir > 0)  // increase angle
+        {
+            if (sprite->spTiltAngle < TILT_MIN)
+            {
+                sprite->spTiltAngle += TILT_STEP * 4;
+                if (sprite->spTiltAngle >= TILT_MIN)
+                    sprite->spBarrelRollDir = 0;
+                break;
+            }
+            sprite->spTiltAngle += TILT_STEP * 4;
+        }
+        else  // decrease angle
+        {
+            if (sprite->spTiltAngle > TILT_MAX)
+            {
+                sprite->spTiltAngle -= TILT_STEP * 4;
+                if (sprite->spTiltAngle <= TILT_MAX)
+                    sprite->spBarrelRollDir = 0;
+                break;
+            }
+            sprite->spTiltAngle -= TILT_STEP * 4;
+        }
         break;
     }
+
     SetOamMatrixRotationScaling(sprite->oam.matrixNum, 1 << 8, 1 << 8, -sprite->spTiltAngle);
 }
 
-static u16 sPrevMapSection;
+static void StartBarrelRoll(void)
+{
+    struct Sprite *sprite = &gSprites[sEonSpriteId];
+
+    if (sprite->spBarrelRollDir == 0)
+    {
+        sprite->spFlipped = 0;
+        if (sprite->spDestAngle >= 0)
+            sprite->spBarrelRollDir = 1;
+        else
+            sprite->spBarrelRollDir = -1;
+    }
+}
 
 static void UpdateMapSectionPopup(void)
 {
@@ -306,6 +421,14 @@ static void ExitSoar(void)
     SetMainCallback2(CB2_FadeOut);
 }
 
+// movement limits
+#define MIN_Z 2
+#define MAX_Z 20
+#define MIN_X 0
+#define MAX_X (30 * 8)
+#define MIN_Y 0
+#define MAX_Y (20 * 8)
+
 static void CB2_HandleInput(void)
 {
     int sinYaw;
@@ -325,25 +448,35 @@ static void CB2_HandleInput(void)
         return;
     }
 
-    gSprites[sEonSpriteId].spTiltDir = 0;
+    if (gMain.newKeys & R_BUTTON)
+    {
+        //gSprites[sEonSpriteId].spBarrelRoll = TRUE;
+        StartBarrelRoll();
+    }
+
+    gSprites[sEonSpriteId].spDestAngle = 0;
 
     if (gMain.heldKeys & DPAD_LEFT)
     {
         sPlayerYaw--;
-        gSprites[sEonSpriteId].spTiltDir = -1;
+        gSprites[sEonSpriteId].spDestAngle = TILT_MIN;
     }
     if (gMain.heldKeys & DPAD_RIGHT)
     {
         sPlayerYaw++;
-        gSprites[sEonSpriteId].spTiltDir = 1;
+        gSprites[sEonSpriteId].spDestAngle = TILT_MAX;
     }
     if (gMain.heldKeys & DPAD_UP)
     {
         sPlayerPosZ += 0x10;
+        if (sPlayerPosZ > (MAX_Z << 8))
+            sPlayerPosZ = (MAX_Z << 8);
     }
     if (gMain.heldKeys & DPAD_DOWN)
     {
         sPlayerPosZ -= 0x10;
+        if (sPlayerPosZ < (MIN_Z << 8))
+            sPlayerPosZ = (MIN_Z << 8);
     }
     
     UpdateEonSpriteRotation(&gSprites[sEonSpriteId]);
@@ -353,6 +486,22 @@ static void CB2_HandleInput(void)
 
     sPlayerPosX += sinYaw / 8;
     sPlayerPosY -= cosYaw / 8;
+    
+    if (gMain.heldKeys & L_BUTTON)
+    {
+        sPlayerPosX += sinYaw / 8;
+        sPlayerPosY -= cosYaw / 8;
+    }
+
+    if (sPlayerPosX < Q_8_8(MIN_X, 0))
+        sPlayerPosX = Q_8_8(MIN_X, 0);
+    else if (sPlayerPosX > Q_8_8(MAX_X, 0))
+        sPlayerPosX = Q_8_8(MAX_X, 0);
+
+    if (sPlayerPosY < Q_8_8(MIN_Y, 0))
+        sPlayerPosY = Q_8_8(MIN_Y, 0);
+    else if (sPlayerPosY > Q_8_8(MAX_Y, 0))
+        sPlayerPosY = Q_8_8(MAX_Y, 0);
 
     UpdateMapSectionPopup();
 
