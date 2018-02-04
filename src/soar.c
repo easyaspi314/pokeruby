@@ -1,12 +1,14 @@
 #include "global.h"
 #include "constants/songs.h"
 #include "decompress.h"
+#include "field_effect.h"
 #include "main.h"
 #include "menu.h"
 #include "overworld.h"
 #include "palette.h"
 #include "region_map.h"
 #include "scanline_effect.h"
+#include "script.h"
 #include "soar.h"
 #include "sound.h"
 #include "sprite.h"
@@ -19,6 +21,7 @@
 #define NOCASH_BREAKPOINT asm("mov r11, r11")
 
 static void CB2_LoadSoarGraphics(void);
+static void DoSoarFieldEffectsCB2(void);
 static void SoarVBlankCallback(void);
 static void SoarHBlankCallback(void);
 static void CB2_HandleInput(void);
@@ -120,30 +123,72 @@ static u8 sShadowSpriteId;
 
 #define Q_8_8(iPart, fPart) (((iPart) << 8) | (fPart))
 
+static const u8 sEonFluteUseMessage[] = _("{PLAYER} used the EON FLUTE.{PAUSE_UNTIL_PRESS}");
+
 void CB2_InitSoar(void)
 {
-    u16 cursorX, cursorY;
-    bool8 inCave;
+    switch (gMain.state)
+    {
+    case 0:
+        // Can't get this to work
+        //gFieldEffectArguments[0] = 0;
+        //FieldEffectStart(FLDEFF_FIELD_MOVE_SHOW_MON_INIT);
+        gMain.state++;
+        break;
+    case 1:
+        Menu_DisplayDialogueFrame();
+        MenuPrintMessageDefaultCoords(sEonFluteUseMessage);
+        gMain.state++;
+        break;
+    case 2:
+        if (Menu_UpdateWindowText())
+        {
+            BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
+            gMain.state++;
+        }
+        break;
+    case 3:
+        if (!UpdatePaletteFade())
+        {
+            u16 cursorX, cursorY;
+            bool8 inCave;
 
-    RegionMap_GetSectionCoordsFromCurrFieldPos(&sPrevMapSection, &cursorX, &cursorY, &inCave);
+            RegionMap_GetSectionCoordsFromCurrFieldPos(&sPrevMapSection, &cursorX, &cursorY, &inCave);
 
-    sPlayerPosX = Q_8_8(cursorX * 8, 0);
-    sPlayerPosY = Q_8_8(cursorY * 8, 0);
-    sPlayerPosZ = Q_8_8(6, 0);
-    sPlayerYaw = 0;
-    sPlayerPitch = 0;
+            sPlayerPosX = Q_8_8(cursorX * 8, 0);
+            sPlayerPosY = Q_8_8(cursorY * 8, 0);
+            sPlayerPosZ = Q_8_8(4, 0);
+            sPlayerYaw = 0;
+            sPlayerPitch = 0;
 
-    // some of these may not be necessary, but I'm just being safe
-    ScanlineEffect_Stop();
-    ResetTasks();
-    ResetSpriteData();
-    ResetPaletteFade();
-    FreeAllSpritePalettes();
+            // some of these may not be necessary, but I'm just being safe
+            ScanlineEffect_Stop();
+            ResetTasks();
+            ResetSpriteData();
+            ResetPaletteFade();
+            FreeAllSpritePalettes();
+            
+            gMain.state = 0;
+            SetMainCallback2(CB2_LoadSoarGraphics);
+        }
+        break;
+    }
+    
+    /*
+    RunTasks();
+    AnimateSprites();
+    CameraUpdate();
+    UpdateCameraPanning();
+    BuildOamBuffer();
+    UpdatePaletteFade();
+    */
+}
 
-    // start fade out
-    BeginNormalPaletteFade(0xFFFFFFFF, 0, 0, 16, 0);
-    SetMainCallback2(CB2_LoadSoarGraphics);
-    gMain.state = 0;
+void ItemUseOnFieldCB_EonFlute(u8 taskId)
+{
+    ScriptContext2_Enable();
+    FreezeMapObjects();
+    SetMainCallback2(CB2_InitSoar);
 }
 
 static void LoadEonGraphics(void)
@@ -178,10 +223,12 @@ static void CB2_LoadSoarGraphics(void)
     {
     case 0:
         // continue fade out
-        if (!UpdatePaletteFade())
+        //if (!UpdatePaletteFade())
             gMain.state++;
         break;
     case 1:
+        SetVBlankCallback(SoarVBlankCallback);
+        SetHBlankCallback(SoarHBlankCallback);
         // Load graphics
         REG_DISPCNT = 0;
         DmaClearLarge32(3, (void *)(VRAM), VRAM_SIZE, 0x1000);
@@ -209,25 +256,23 @@ static void CB2_LoadSoarGraphics(void)
         gMain.state++;
         break;
     case 2:
-        // start fade in
         Text_LoadWindowTemplate(&gWindowTemplate_81E7224);
         InitMenuWindow(&gWindowTemplate_81E7224);
         Menu_DrawStdWindowFrame(sPopupWindowRect.left, sPopupWindowRect.top, sPopupWindowRect.right, sPopupWindowRect.bottom);
         gMain.state++;
         break;
     case 3:
+        //break;
         // continue fade in
         //if (!UpdatePaletteFade())
         {
-            DmaClear32(3, (void *)(VRAM + 0x6000), 0x2000);
-            SetVBlankCallback(SoarVBlankCallback);
-            SetHBlankCallback(SoarHBlankCallback);
+            //DmaClear32(3, (void *)(VRAM + 0x6000), 0x2000);
 
             REG_IME = 0;
             REG_IE |= INTR_FLAG_VBLANK | INTR_FLAG_HBLANK;
             REG_IME = 1;
             REG_DISPSTAT |= DISPSTAT_VBLANK_INTR | DISPSTAT_HBLANK_INTR;
-            
+
             LoadCompressedObjectPic(&sShadowSpriteSheet);
             sShadowSpriteId = CreateSprite(&sShadowSpriteTemplate, DISPLAY_WIDTH / 2, 3 * DISPLAY_HEIGHT / 4, 0);
 
@@ -239,10 +284,11 @@ static void CB2_LoadSoarGraphics(void)
         gMain.state++;
         break;
     case 4:
-        //if (!UpdatePaletteFade())
+        if (!UpdatePaletteFade())
             SetMainCallback2(CB2_HandleInput);
         break;
     }
+    BuildOamBuffer();
 }
 
 static void SoarVBlankCallback(void)
@@ -353,23 +399,23 @@ static void UpdateEonSpriteRotation(struct Sprite *sprite)
         {
             if (sprite->spTiltAngle < TILT_MIN)
             {
-                sprite->spTiltAngle += TILT_STEP * 4;
+                sprite->spTiltAngle += TILT_STEP * 8;
                 if (sprite->spTiltAngle >= TILT_MIN)
                     sprite->spBarrelRollDir = 0;
                 break;
             }
-            sprite->spTiltAngle += TILT_STEP * 4;
+            sprite->spTiltAngle += TILT_STEP * 8;
         }
         else  // decrease angle
         {
             if (sprite->spTiltAngle > TILT_MAX)
             {
-                sprite->spTiltAngle -= TILT_STEP * 4;
+                sprite->spTiltAngle -= TILT_STEP * 8;
                 if (sprite->spTiltAngle <= TILT_MAX)
                     sprite->spBarrelRollDir = 0;
                 break;
             }
-            sprite->spTiltAngle -= TILT_STEP * 4;
+            sprite->spTiltAngle -= TILT_STEP * 8;
         }
         break;
     }
@@ -449,10 +495,7 @@ static void CB2_HandleInput(void)
     }
 
     if (gMain.newKeys & R_BUTTON)
-    {
-        //gSprites[sEonSpriteId].spBarrelRoll = TRUE;
         StartBarrelRoll();
-    }
 
     gSprites[sEonSpriteId].spDestAngle = 0;
 

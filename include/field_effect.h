@@ -252,6 +252,7 @@ void MultiplyInvertedPaletteRGBComponents(u16, u8, u8, u8);
 void sub_80878A8(void);
 void sub_8087BA8(void);
 void MultiplyPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b);
+void Fldeff_FlyLand(void);
 
 extern s32 gFieldEffectArguments[8];
 

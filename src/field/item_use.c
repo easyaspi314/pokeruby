@@ -1204,5 +1204,7 @@ void ItemUseOutOfBattle_CannotUse(u8 taskId)
 // This is used by the yellow flute for now
 void ItemUseOutOfBattle_EonFlute(u8 taskId)
 {
-    SetMainCallback2(CB2_InitSoar);
+    gFieldItemUseCallback = (void *)ItemUseOnFieldCB_EonFlute;
+    SetUpItemUseOnFieldCallback(taskId);
+    //SetMainCallback2(CB2_InitSoar);
 }
