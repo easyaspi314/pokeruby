@@ -362,12 +362,12 @@ static void SoarHBlankCallback(void)
     // Note that the lxr shifts down first!
 
     // horizontal offset
-    lxr= 30 * lcf;
+    lxr= 120 * (lsf>>4);
     lyr= lsf<<3;
     REG_BG2X= sPlayerPosX - lxr + lyr;
 
     // vertical offset
-    lxr= 30 * lsf;
+    lxr= 120 * (lsf>>4);
     lyr= lcf<<3;
     REG_BG2Y= sPlayerPosY - lxr - lyr;
 }
