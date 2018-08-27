@@ -1,20 +1,20 @@
 CC := gcc
 
-CFLAGS := -std=c99 -O3 -Wall -Wno-switch -Werror
-LDFLAGS := -s
+CFLAGS := -std=c99 -O0 -g3 -Wall -Wno-switch -Werror
+LDFLAGS :=
 SRCS := asm_file.c c_file.c charmap.c preproc.c string_parser.c \
 	utf8.c stack.c my_string.c hash_map.c
 OBJS := $(SRCS:.c=.o)
 HEADERS := asm_file.h c_file.h char_util.h charmap.h preproc.h string_parser.h \
 	utf8.h stack.h hash_map.h
 
-.PHONY: all clean
+.PHONY: all clean ucpp/libucpp.a
 
 all: preproc
 	@:
 
 ucpp/libucpp.a:
-	$(MAKE) -C ucpp
+	$(MAKE) -C ucpp libucpp.a STAND_ALONE=
 
 preproc: $(OBJS) ucpp/libucpp.a
 	$(CC) $(OBJS) ucpp/libucpp.a -o $@ $(LDFLAGS)

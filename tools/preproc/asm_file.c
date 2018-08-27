@@ -82,7 +82,7 @@ AsmFile *AsmFile_New(string *filename, string *data)
             if (unlikely(ferror(fp)))
                 FATAL_ERROR("Failed to read \"%s\".\n", filename->c_str);
 
-            m->buffer = (char *)realloc(m->buffer, m->size + count + 1);
+            m->buffer = (char *)realloc(m->buffer, m->size + 1, m->size + count + 1);
 
             memcpy(m->buffer + m->size, tmp, count);
             m->size += count;

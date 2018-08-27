@@ -23,7 +23,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#define MEM_DEBUG
+#define AUDIT
+#define MEM_CHECK
+#include "ucpp/mem.h"
+#define malloc getmem
+#define free freemem
+#define realloc incmem
+#define memcpy mmv
+#define memmove mmvwo
 #ifndef r
 #ifdef __cplusplus
 #define r __restrict

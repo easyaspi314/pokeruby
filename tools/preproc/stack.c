@@ -39,7 +39,7 @@ void Stack_Grow(Stack *m)
     if (unlikely(m->capacity > UINT_MAX / 2))
         FATAL_ERROR("Stack is out of capacity!\n");
 
-    void **newbuf = (void **)realloc(m->buffer, 2 * m->capacity * sizeof(void *));
+    void **newbuf = (void **)realloc(m->buffer, m->capacity * sizeof(void *), 2 * m->capacity * sizeof(void *));
     if (unlikely(!newbuf))
         FATAL_ERROR("Couldn't grow stack!\n");
 

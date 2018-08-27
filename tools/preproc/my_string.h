@@ -35,19 +35,21 @@ typedef struct string
 #define string_tmp_len(str, len)                                                                   \
     (string[])                                                                                     \
     {                                                                                              \
-        (string){ str, len, len, false, false }, { 0 }                                             \
+        (string){ (char *)str, len, len, false, false }, { 0 }                                             \
     }
-
-inline static string *string_tmp(char *str)
+/*
+inline static string *string_tmp(const char *str)
 {
     unsigned len = (unsigned)strlen(str);
     return string_tmp_len(str, len);
 }
+*/
+#define string_tmp(str) string_tmp_len(str, strlen(str))
 
 void string_Delete(string *m);
 bool string_equal(const string *r str1, const string *r s);
 string *string_add(string *r str1, const string *r str2);
-string *string_add_char(string *str, unsigned char c);
+string *string_add_char(string *str, const unsigned char c);
 void string_reserve(string *str, unsigned len);
 
 string *string_New(char *str, unsigned len);

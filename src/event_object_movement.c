@@ -2250,7 +2250,7 @@ u16 GetObjectPaletteTag(u8 paletteIndex)
     return 0x11FF;
 }
 
-movement_type_empty_callback(MovementType_None);
+movement_type_empty_callback(MovementType_None)
 movement_type_def(MovementType_WanderAround, gMovementTypeFuncs_WanderAround);
 
 u8 MovementType_WanderAround_Step0(struct EventObject *eventObject, struct Sprite *sprite)

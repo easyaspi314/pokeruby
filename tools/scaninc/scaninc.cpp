@@ -54,10 +54,9 @@ int main(int argc, char **argv)
 
     while (argc > 1)
     {
-        std::string arg(argv[0]);
-        if (arg.substr(0, 2) == "-I")
+        if (argv[0][0] == '-' && argv[0][1] == 'I')
         {
-            std::string includeDir = arg.substr(2);
+            std::string includeDir(&argv[0][2]);
             if (includeDir.empty())
             {
                 argc--;

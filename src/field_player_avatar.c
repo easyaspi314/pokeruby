@@ -197,7 +197,7 @@ static u8 (*const sPlayerAvatarSecretBaseMatSpin[])(struct Task *, struct EventO
     PlayerAvatar_SecretBaseMatSpinStep3,
 };
 
-movement_type_empty_callback(MovementType_Player);
+movement_type_empty_callback(MovementType_Player)
 
 void player_step(u8 direction, u16 newKeys, u16 heldKeys)
 {

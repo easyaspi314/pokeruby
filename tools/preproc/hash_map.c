@@ -65,8 +65,8 @@ static void Grow(HashMap *m)
 
     unsigned newcap = m->capacity * 2;
 
-    m->keys = (int *)realloc(m->keys, newcap * sizeof(int));
-    m->values = (string **)realloc(m->values, newcap * sizeof(string *));
+    m->keys = (int *)realloc(m->keys, m->capacity * sizeof(int), newcap * sizeof(int));
+    m->values = (string **)realloc(m->values, m->capacity * sizeof(string *), newcap * sizeof(string *));
 
     if (unlikely(!m->keys || !m->values))
         FATAL_ERROR("HashMap: Out of memory!\n");

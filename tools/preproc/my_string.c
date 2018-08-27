@@ -7,7 +7,7 @@ string *string_New(char *str, unsigned len)
     string *m = (string *)malloc(sizeof(string));
     if (len > 0 && str)
     {
-        m->c_str = (char *)calloc(1, len + 1);
+        m->c_str = (char *)malloc(len + 1);
         m->length = len;
         m->dynamic = true;
         m->heap = true;
@@ -50,7 +50,7 @@ string *string_add(string *r str1, const string *r str2)
     {
         if (str1->capacity < newlen + 1)
         {
-            str1->c_str = (char *)realloc(str1->c_str, newlen + 8);
+            str1->c_str = (char *)realloc(str1->c_str, str1->capacity, newlen + 8);
             if (unlikely(!str1->c_str))
                 FATAL_ERROR("string: failed to realloc!\n");
             str1->capacity = newlen * 2 + 1;
@@ -75,7 +75,7 @@ string *string_add(string *r str1, const string *r str2)
     return str1;
 }
 
-string *string_add_char(string *str, unsigned char c)
+string *string_add_char(string *str, const unsigned char c)
 {
     const unsigned newlen = str->length + 1;
 
@@ -83,7 +83,7 @@ string *string_add_char(string *str, unsigned char c)
     {
         if (str->capacity < newlen + 1)
         {
-            str->c_str = (char *)realloc(str->c_str, newlen * 2 + 1);
+            str->c_str = (char *)realloc(str->c_str, str->capacity, newlen * 2 + 1);
             if (unlikely(!str->c_str))
                 FATAL_ERROR("string: failed to realloc!\n");
             str->capacity = newlen * 2 + 1;
@@ -116,7 +116,7 @@ void string_reserve(string *str, unsigned count)
 
     if (str->dynamic)
     {
-        str->c_str = (char *)realloc(str->c_str, count + 1);
+        str->c_str = (char *)realloc(str->c_str, str->capacity, count + 1);
         if (unlikely(!str->c_str))
             FATAL_ERROR("string: failed to realloc!\n");
     }

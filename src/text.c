@@ -187,7 +187,7 @@ static u8 sWaitType;
 static u8 sLineLength;
 static struct GlyphBuffer sGlyphBuffer;
 
-EWRAM_DATA u16 gBGTilemapBuffers[4][0x400] = {0};
+EWRAM_DATA u16 gBGTilemapBuffers[4][0x400] = { {0} };
 
 EWRAM_DATA u8 gStringVar1[0x100] = {0};
 EWRAM_DATA u8 gStringVar2[0x100] = {0};
@@ -2699,6 +2699,7 @@ static void GetGlyphTilePointers(u8 fontNum, u8 language, u16 glyph, u8 **upperT
         *lowerTilePtr = font->glyphs + sFontType3Map[index + 1] * font->glyphSize;
         break;
     case 4:
+        // XXX: Unsequenced modification
         *upperTilePtr = font->glyphs
             + (glyph & 0xFFF0) * font->glyphSize
             + (((glyph &= 0xF) * font->glyphSize) >> 1);
@@ -3394,7 +3395,8 @@ static u16 GetBlankTileNum(struct Window *win)
     return retVal;
 }
 
-static s32 Window_MoveCursor(struct Window *win, u8 x, u8 y)
+// XXX: -Wreturn-type
+static s32 Window_MoveCursor(register struct Window *win, u8 x, u8 y)
 {
     win->cursorX = x;
     win->cursorY = y & 0xF8;

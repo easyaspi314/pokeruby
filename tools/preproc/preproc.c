@@ -21,7 +21,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
-
+#include <signal.h>
+#define MEM_DEBUG
+#define AUDIT
+#define MEM_CHECK
 #include "ucpp/mem.h"
 #include "ucpp/cpp.h"
 
@@ -36,6 +39,20 @@
 
 Charmap *g_charmap = NULL;
 
+static void sighandle(int signum)
+{
+	perror("sighandle");/*
+    FILE *f = fopen("/proc/self/maps", "r");
+    if (f)
+    {
+        int c;
+        while ((c = getc_unlocked(f)) != EOF)
+		    fputc(c, stderr);
+		fclose(f);
+	}
+    */
+    abort();
+}
 /*
  * Print line information.
  */
@@ -44,7 +61,7 @@ static string *AddLineInfo(string *data, char *fn, long line)
     char *b;
 
     b = (char *)getmem(50 + strlen(fn));
-    int len = sprintf(b, "\nBLAH# %ld \"%s\"\n", line, fn);
+    int len = sprintf(b, "# %ld \"%s\"\n", line, fn);
     if (unlikely(len < 7))
         FATAL_ERROR("Failed to add line info!\n");
 
@@ -58,10 +75,10 @@ static string *AddLineInfo(string *data, char *fn, long line)
 string *PreprocessFile(const string *path, Stack *defines, Stack *includes, bool lines)
 {
     int status;
-    char *path_perm;
-    struct lexer_state ls = { 0 };
+    struct lexer_state *ls = getmem(sizeof(struct lexer_state));
+    *ls = (struct lexer_state) {0};
     FILE *input;
-
+signal(SIGSEGV, &sighandle);
     string *ret = empty_string();
 
     init_cpp();
@@ -75,33 +92,28 @@ string *PreprocessFile(const string *path, Stack *defines, Stack *includes, bool
 
     emit_dependencies = 0;
 
-    init_lexer_state(&ls);
-    init_lexer_mode(&ls);
-    ls.flags |= DEFAULT_CPP_FLAGS | HANDLE_PRAGMA | TEXT_OUTPUT | LEXER;
-    if (!lines)
-        ls.flags |= (LINE_NUM | GCC_LINE_NUM);
+    init_lexer_state(ls);
+    init_lexer_mode(ls);
+    ls->flags |= HANDLE_ASSERTIONS | LEXER;
+    if (lines)
+        ls->flags |= (LINE_NUM | GCC_LINE_NUM);
     else
-        ls.flags &= ~(LINE_NUM | GCC_LINE_NUM);
+        ls->flags &= ~(LINE_NUM | GCC_LINE_NUM);
 
     if (path != NULL && path->length > 0 && strcmp(path->c_str, "-") != 0)
     {
-        path_perm = (char *)malloc(path->length + 1);
-        memcpy(path_perm, path->c_str, path->length + 1);
 
-        set_init_filename(path_perm, 1);
-
-        input = fopen_mmap_file(path_perm);
+        input = fopen(path->c_str, "rb");
 
         if (!input)
             FATAL_ERROR("Could not open %s: %s\n", path->c_str, strerror(errno));
 
-        set_input_file(&ls, input);
+        ls->input = input;
+		set_init_filename(path->c_str, 1);
     }
     else
     {
-        set_init_filename("<stdin>\n", 0);
-
-        ls.input = stdin;
+        ls->input = stdin;
     }
 
     string *tmp;
@@ -113,26 +125,27 @@ string *PreprocessFile(const string *path, Stack *defines, Stack *includes, bool
 
     while ((tmp = (string *)Stack_Top(defines)) != NULL)
     {
-        define_macro(&ls, tmp->c_str);
+        define_macro(ls, tmp->c_str);
         Stack_Pop(defines);
     }
 
-    enter_file(&ls, ls.flags);
+    enter_file(ls, ls->flags);
 
-    while ((status = lex(&ls)) < CPPERR_EOF)
+    while ((status = lex(ls)) < CPPERR_EOF)
     {
         if (status)
         {
             /* error condition -- no token was retrieved */
             continue;
         }
+
         /* we print each token: its numerical value, and its
            string content; if this is a PRAGMA token, the
            string content is in fact a compressed token list,
            that we uncompress and print. */
-        if (ls.ctok->type == PRAGMA)
+        if (ls->ctok->type == PRAGMA)
         {
-            unsigned char *c = (unsigned char *)(ls.ctok->name);
+            unsigned char *c = (unsigned char *)(ls->ctok->name);
 
             for (; *c; c++)
             {
@@ -150,27 +163,29 @@ string *PreprocessFile(const string *path, Stack *defines, Stack *includes, bool
                 }
             }
         }
-        else if (lines && ls.ctok->type == CONTEXT)
+        else if (ls->ctok->type == CONTEXT)
         {
-            AddLineInfo(ret, ls.ctok->name, ls.ctok->line);
+		fprintf(stderr, "%s\n", ls->ctok->name);
+            AddLineInfo(ret, ls->ctok->name, ls->ctok->line);
         }
-        else if (ls.ctok->type == NEWLINE)
+        else if (ls->ctok->type == NEWLINE)
         {
             ret = string_add_char(ret, '\n');
         }
-        else if (ls.ctok->type != COMMENT && ls.ctok->type != OPT_NONE)
+        else if (ls->ctok->type != COMMENT && ls->ctok->type != OPT_NONE)
         {
             unsigned i = 0;
-            char *tmp = STRING_TOKEN(ls.ctok->type) ? ls.ctok->name : operators_name[ls.ctok->type];
-            while (tmp[i])
+            const char *tmp = STRING_TOKEN(ls->ctok->type) ? ls->ctok->name : operators_name[ls->ctok->type];
+            while (tmp && tmp[i])
                 ret = string_add_char(ret, tmp[i++]);
         }
     }
 
     /* give back memory and exit */
     wipeout();
-    free_lexer_state(&ls);
-
+    free_lexer_state(ls);
+	freemem(ls);
+//report_leaks();
     return ret;
 }
 
@@ -454,5 +469,10 @@ int main(int argc, char **argv)
     {
         puts(file->c_str);
     }
+
+	string_Delete(file);
+	string_Delete(path);
+    Stack_Delete(defines);
+    Stack_Delete(includes);
     return 0;
 }

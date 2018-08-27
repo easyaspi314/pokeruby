@@ -40,9 +40,6 @@ extern u8 gBirchSpeech_AhOkayYouArePlayer[];
 extern u8 gBirchSpeech_AreYouReady[];
 
 extern struct SpriteTemplate gUnknown_02024E8C;
-extern const struct MenuAction gUnknown_081E79B0[];
-extern const struct MenuAction gMalePresetNames[];
-extern const struct MenuAction gFemalePresetNames[];
 
 extern const u8 gUnknown_081E7834[];
 

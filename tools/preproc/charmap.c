@@ -106,7 +106,7 @@ static void CharmapReader_Delete(CharmapReader *m)
 
 static Lhs ReadLhs(CharmapReader *m)
 {
-    Lhs lhs;
+    Lhs lhs = {0};
 
     for (;;)
     {
@@ -375,7 +375,7 @@ static void SkipWhitespace(CharmapReader *m)
 
 Charmap *Charmap_New(char *file)
 {
-    Charmap *m = (Charmap *)calloc(1, sizeof(Charmap));
+    Charmap *m = (Charmap *)malloc(sizeof(Charmap));
 
     string *filename = string(file, strlen(file));
     CharmapReader *reader = CharmapReader_New(filename);

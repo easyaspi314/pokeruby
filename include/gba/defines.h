@@ -3,6 +3,9 @@
 
 #include <stddef.h>
 
+// Prevent extension warnings
+#define asm __asm__
+
 #define TRUE  1
 #define FALSE 0
 

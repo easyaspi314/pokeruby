@@ -10,7 +10,7 @@ endif
 
 #### Tools ####
 
-SHELL     := /bin/bash -o pipefail
+SHELL     := bash -o pipefail
 AS        := $(PREFIX)as
 CC1       := tools/agbcc/bin/agbcc$(EXE)
 CPP       := cpp
@@ -26,7 +26,7 @@ SCANINC   := tools/scaninc/scaninc$(EXE)
 RAMSCRGEN := tools/ramscrgen/ramscrgen$(EXE)
 
 ASFLAGS  := -mcpu=arm7tdmi -I include --defsym $(GAME_VERSION)=1 --defsym REVISION=$(GAME_REVISION) --defsym $(GAME_LANGUAGE)=1 --defsym DEBUG=$(DEBUG)
-CC1FLAGS := -mthumb-interwork -Wimplicit -Wparentheses -Wunused -Werror -O2 -fhex-asm
+CC1FLAGS := -mthumb-interwork -Wimplicit -Wparentheses -Wunused -Werror -O2
 CPPFLAGS := -I tools/agbcc/include -I include -D$(GAME_VERSION) -DREVISION=$(GAME_REVISION) -D$(GAME_LANGUAGE) -DDEBUG=$(DEBUG)
 
 # Check agbcc's version. The '' prevents old agbcc versions
@@ -36,9 +36,9 @@ CPPFLAGS := -I tools/agbcc/include -I include -D$(GAME_VERSION) -DREVISION=$(GAM
 CC1_REQ_VER := 1
 CC1_VER     := $(shell $(CC1) -agbcc-version '' 2>/dev/null || echo 0)
 
-ifneq ($(CC1_REQ_VER),$(CC1_VER))
-    $(error Please update agbcc!)
-endif
+#ifneq ($(CC1_REQ_VER),$(CC1_VER))
+#    $(error Please update agbcc!)
+#endif
 
 #### Files ####
 

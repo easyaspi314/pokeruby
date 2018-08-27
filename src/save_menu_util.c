@@ -68,7 +68,7 @@ void PrintSavePlayerName(s16 x, s16 y)
 
 void PrintSaveMapName(s16 x, s16 y)
 {
-    char name[32];
+    u8 name[32];
 
     CopyMapName(name, gMapHeader.regionMapSectionId);
     Menu_PrintText(name, x, y);
@@ -76,7 +76,7 @@ void PrintSaveMapName(s16 x, s16 y)
 
 void PrintSaveBadges(s16 x, s16 y)
 {
-    char badges[16];
+    u8 badges[16];
 
     Menu_PrintText(gOtherText_Badges, x, y);
     ConvertIntToDecimalString(badges, GetBadgeCount());
@@ -85,7 +85,7 @@ void PrintSaveBadges(s16 x, s16 y)
 
 void PrintSavePokedexCount(s16 x, s16 y)
 {
-    char pokedex[16];
+    u8 pokedex[16];
 
     Menu_PrintText(gOtherText_Pokedex, x, y);
     ConvertIntToDecimalStringN(pokedex, GetPokedexSeenCount(), 1, 3);
@@ -94,7 +94,7 @@ void PrintSavePokedexCount(s16 x, s16 y)
 
 void PrintSavePlayTime(s16 x, s16 y)
 {
-    char playtime[16];
+    u8 playtime[16];
 
     Menu_PrintText(gOtherText_PlayTime, x, y);
     FormatPlayTime(playtime, gSaveBlock2.playTimeHours, gSaveBlock2.playTimeMinutes, 1);
@@ -125,7 +125,7 @@ u16 GetPokedexSeenCount()
     return pokedexSeenCount;
 }
 
-void FormatPlayTime(char *playtime, u16 hours, u16 minutes, u16 colon)
+void FormatPlayTime(u8 *playtime, u16 hours, u16 minutes, u16 colon)
 {
     s16 _colon = colon;
     playtime = ConvertIntToDecimalString(playtime, hours);
